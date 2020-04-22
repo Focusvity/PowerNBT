@@ -7,18 +7,24 @@ import static me.dpohvar.powernbt.utils.NBTUtils.nbtUtils;
  *
  * @author DPOH-VAR
  */
-public abstract class NBTTagDatable<T> extends NBTBase {
+public abstract class NBTTagDatable<T> extends NBTBase
+{
 
-    NBTTagDatable(Object handle) {
+    NBTTagDatable(Object handle)
+    {
         super(handle);
     }
 
     @SuppressWarnings("unchecked")
-    public T get(){
+    public T get()
+    {
         return (T) nbtUtils.getValue(handle);
     }
 
-    public void set(T value){
+    public void set(T value)
+    {
         nbtUtils.setValue(handle, value);
-    };
+    }
+
+    ;
 }

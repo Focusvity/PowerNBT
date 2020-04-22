@@ -15,33 +15,48 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class PowerNBT extends JavaPlugin {
+public class PowerNBT extends JavaPlugin
+{
 
-    private static final boolean SILENT = true;
-    public static PowerNBT plugin;
     public static final Charset charset = Charset.forName("UTF8");
-    private final HashMap<String, Caller> callers = new HashMap<String, Caller>();
-    private Translator translator;
+    private static final boolean SILENT = true;
     private static final Tokenizer tokenizer = new Tokenizer(
             null, null, null, Arrays.asList('\"'), null, Arrays.asList(' ')
     );
+    public static PowerNBT plugin;
+    private final HashMap<String, Caller> callers = new HashMap<String, Caller>();
     private final String prefix = ChatColor.GOLD.toString() + ChatColor.BOLD + "[" + ChatColor.YELLOW + "PowerNBT" + ChatColor.GOLD + ChatColor.BOLD + "] " + ChatColor.RESET;
     private final String errorPrefix = ChatColor.DARK_RED.toString() + ChatColor.BOLD + "[" + ChatColor.RED + "PowerNBT" + ChatColor.DARK_RED + ChatColor.BOLD + "] " + ChatColor.RESET;
+    private Translator translator;
     private TypeCompleter typeCompleter;
 
     /**
-     * Get the folder where are stored saved files
+     * Get PowerNBT API
      *
+     * @return api
+     */
+    public static NBTManager getApi()
+    {
+        return NBTManager.getInstance();
+    }
+
+    /**
+     * Get the folder where are stored saved files
+     * <p>
      * This files are used for command: <code>/nbt $filename</code>
+     *
      * @return folder
      */
-    public File getNBTFilesFolder() {
+    public File getNBTFilesFolder()
+    {
         return new File(getDataFolder(), "nbt");
     }
 
-    public Caller getCaller(CommandSender sender) {
+    public Caller getCaller(CommandSender sender)
+    {
         Caller c = callers.get(sender.getName());
-        if (c != null) {
+        if (c != null)
+        {
             c.setOwner(sender);
             return c;
         }
@@ -50,27 +65,32 @@ public class PowerNBT extends JavaPlugin {
         return c;
     }
 
-    public File getLangFolder() {
+    public File getLangFolder()
+    {
         File lang = new File(getDataFolder(), "lang");
         lang.mkdirs();
         return lang;
     }
 
-    public File getTemplateFolder() {
+    public File getTemplateFolder()
+    {
         File lang = new File(getDataFolder(), "templates");
         lang.mkdirs();
         return lang;
     }
 
-    public Tokenizer getTokenizer() {
+    public Tokenizer getTokenizer()
+    {
         return tokenizer;
     }
 
-    public String getPrefix() {
+    public String getPrefix()
+    {
         return prefix;
     }
 
-    public String getErrorPrefix() {
+    public String getErrorPrefix()
+    {
         return errorPrefix;
     }
 
@@ -79,7 +99,8 @@ public class PowerNBT extends JavaPlugin {
      *
      * @return true if plugin in debug mode
      */
-    public boolean isDebug() {
+    public boolean isDebug()
+    {
         return getConfig().getBoolean("debug");
     }
 
@@ -88,28 +109,34 @@ public class PowerNBT extends JavaPlugin {
      *
      * @param val true to enable debug mode
      */
-    public void setDebug(boolean val) {
+    public void setDebug(boolean val)
+    {
         getConfig().set("debug", val);
     }
 
-    public String translate(String key) {
+    public String translate(String key)
+    {
         return translator.translate(key);
     }
 
-    public String translate(String key, Object... values) {
+    public String translate(String key, Object... values)
+    {
         return translator.translate(key, values);
     }
 
     @Override
-    public void onLoad() {
+    public void onLoad()
+    {
         plugin = this;
     }
 
     @Override
-    public void onEnable() {
+    public void onEnable()
+    {
         String classMap = this.getConfig().getString("classmap");
-        if (classMap != null && !classMap.isEmpty()) {
-            File classMapFile = new File(getDataFolder(),classMap);
+        if (classMap != null && !classMap.isEmpty())
+        {
+            File classMapFile = new File(getDataFolder(), classMap);
             ReflectionUtils.addReplacementsYaml(classMapFile);
         }
         String lang = this.getConfig().getString("lang");
@@ -125,33 +152,28 @@ public class PowerNBT extends JavaPlugin {
         initializeUtils();
     }
 
-    public TypeCompleter getTypeCompleter() {
+    public TypeCompleter getTypeCompleter()
+    {
         return typeCompleter;
     }
 
-    private void initializeUtils() {
+    private void initializeUtils()
+    {
         printDebug(EntityUtils.entityUtils);
         printDebug(ItemStackUtils.itemStackUtils);
         printDebug(NBTBlockUtils.nbtBlockUtils);
         printDebug(NBTCompressedUtils.nbtCompressedUtils);
-        if (getConfig().getBoolean("utils.chunk", false)) {
+        if (getConfig().getBoolean("utils.chunk", false))
+        {
             printDebug(ChunkUtils.chunkUtils);
         }
         printDebug(NBTUtils.nbtUtils);
         printDebug(PacketUtils.packetUtils);
     }
 
-    private void printDebug(Object t){
+    private void printDebug(Object t)
+    {
         if (isDebug()) getLogger().info("" + t);
-    }
-
-    /**
-     * Get PowerNBT API
-     *
-     * @return api
-     */
-    public static NBTManager getApi(){
-        return NBTManager.getInstance();
     }
 }
 

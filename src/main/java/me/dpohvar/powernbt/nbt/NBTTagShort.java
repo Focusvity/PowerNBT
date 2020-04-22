@@ -7,49 +7,60 @@ import static me.dpohvar.powernbt.utils.NBTUtils.nbtUtils;
  *
  * @author DPOH-VAR
  */
-public class NBTTagShort extends NBTTagNumeric<Short> {
+public class NBTTagShort extends NBTTagNumeric<Short>
+{
     public static final byte typeId = 2;
 
-    public NBTTagShort() {
-        this((short)0);
+    public NBTTagShort()
+    {
+        this((short) 0);
     }
 
-    public NBTTagShort(String ignored) {
-        this((short)0);
+    public NBTTagShort(String ignored)
+    {
+        this((short) 0);
     }
 
-    public NBTTagShort(short b) {
-        super(nbtUtils.createTag(b,typeId));
+    public NBTTagShort(short b)
+    {
+        super(nbtUtils.createTag(b, typeId));
     }
 
-    public NBTTagShort(String ignored, short b) {
+    public NBTTagShort(String ignored, short b)
+    {
         this(b);
     }
 
-    NBTTagShort(boolean ignored, Object tag) {
+    NBTTagShort(boolean ignored, Object tag)
+    {
         super(tag);
-        if (nbtUtils.getTagType(tag)!=typeId) throw new IllegalArgumentException();
+        if (nbtUtils.getTagType(tag) != typeId) throw new IllegalArgumentException();
     }
 
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (o instanceof NBTBase) o = ((NBTBase) o).getHandle();
         return handle.equals(o);
     }
 
-    public int hashCode() {
+    public int hashCode()
+    {
         return handle.hashCode();
     }
 
-    public Short get() {
+    public Short get()
+    {
         return (Short) super.get();
     }
 
-    public void setNumber(Number value) {
+    public void setNumber(Number value)
+    {
         set(value.shortValue());
     }
 
     @Override
-    public byte getTypeId() {
+    public byte getTypeId()
+    {
         return typeId;
     }
 

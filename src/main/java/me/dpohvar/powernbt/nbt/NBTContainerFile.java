@@ -9,80 +9,112 @@ import java.util.logging.Level;
 
 import static me.dpohvar.powernbt.utils.NBTUtils.nbtUtils;
 
-public class NBTContainerFile extends NBTContainer<File> {
+public class NBTContainerFile extends NBTContainer<File>
+{
 
     private File file;
 
-    public NBTContainerFile(File file) {
+    public NBTContainerFile(File file)
+    {
         this.file = file;
     }
 
-    public File getObject() {
+    public File getObject()
+    {
         return file;
     }
 
     @Override
-    public NBTBase readTag() {
+    public NBTBase readTag()
+    {
         DataInputStream input = null;
-        try {
+        try
+        {
             input = new DataInputStream(new FileInputStream(file));
             Object tag = nbtUtils.readTag(input);
             return NBTBase.wrap(tag);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e)
+        {
             return null;
-        } catch (IOException e) {
-            throw new RuntimeException("can't read file",e);
-        } catch (Exception e) {
-            throw new RuntimeException("wrong format",e);
-        } finally {
-            if (input!=null) try{
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException("can't read file", e);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("wrong format", e);
+        }
+        finally
+        {
+            if (input != null) try
+            {
                 input.close();
-            } catch (IOException ignored) {
+            }
+            catch (IOException ignored)
+            {
             }
         }
     }
 
     @Override
-    public void writeTag(NBTBase base) {
+    public void writeTag(NBTBase base)
+    {
         FileOutputStream outputStream = null;
-        try {
-            if (!file.exists()) {
+        try
+        {
+            if (!file.exists())
+            {
                 new File(file.getParent()).mkdirs();
                 file.createNewFile();
             }
             outputStream = new FileOutputStream(file);
             DataOutputStream output = new DataOutputStream(outputStream);
-            nbtUtils.writeTagToOutput(output,base.getHandle());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("file "+file+" not found", e);
-        } catch (Exception e) {
+            nbtUtils.writeTagToOutput(output, base.getHandle());
+        }
+        catch (FileNotFoundException e)
+        {
+            throw new RuntimeException("file " + file + " not found", e);
+        }
+        catch (Exception e)
+        {
             throw new RuntimeException("can't write to file", e);
-        } finally {
-            if (outputStream!=null) try {
+        }
+        finally
+        {
+            if (outputStream != null) try
+            {
                 outputStream.close();
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 Bukkit.getLogger().log(Level.ALL, "can not close NBT file " + file, e);
             }
         }
     }
 
     @Override
-    public List<String> getTypes() {
+    public List<String> getTypes()
+    {
         return new ArrayList<String>();
     }
 
     @Override
-    public void eraseTag() {
+    public void eraseTag()
+    {
         file.delete();
     }
 
     @Override
-    protected Class<File> getContainerClass() {
+    protected Class<File> getContainerClass()
+    {
         return File.class;
     }
 
     @Override
-    public String toString(){
-        return "file:"+file.toString();
+    public String toString()
+    {
+        return "file:" + file.toString();
     }
 }

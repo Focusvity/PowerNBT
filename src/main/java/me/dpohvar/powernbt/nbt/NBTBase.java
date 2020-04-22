@@ -16,70 +16,22 @@ import static me.dpohvar.powernbt.utils.NBTUtils.nbtUtils;
  *
  * @author DPOH-VAR
  */
-public abstract class NBTBase {
+public abstract class NBTBase
+{
 
     final protected Object handle;
 
-    final public void read(java.io.DataInput input) throws IOException {
-        nbtUtils.readInputToTag(input, handle);
-    }
-
-    final public void write(java.io.DataOutput output) throws IOException {
-        nbtUtils.writeTagDataToOutput(output, handle);
-    }
-
-    final public byte[] toBytes(){
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(buffer);
-        try {
-            write(out);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return buffer.toByteArray();
-    }
-
-    final public void fromBytes(byte[] source){
-        ByteArrayInputStream buffer = new ByteArrayInputStream(source);
-        DataInputStream in = new DataInputStream(buffer);
-        try {
-            read(in);
-        } catch (IOException e) {
-            Bukkit.getLogger().log(Level.ALL, "can not read NBT from bytes", e);
-        }
-    }
-
-    @Override
-    abstract public String toString();
-
-    @Override
-    abstract public int hashCode();
-
-    NBTBase(Object handle) {
+    NBTBase(Object handle)
+    {
         this.handle = handle;
     }
 
-    public Object getHandle() {
-        return handle;
-    }
-
-    public String getName() {
-        return nbtUtils.getTagName(handle);
-    }
-
-    @Deprecated
-    public void setName(String name) {
-       nbtUtils.seTagName(handle,name);
-    }
-
-    NBTBase getDefault() {
-        return getDefault(getTypeId());
-    }
-
-    public static NBTBase wrap(Object handle) {
-        if(handle==null) return null;
+    public static NBTBase wrap(Object handle)
+    {
+        if (handle == null) return null;
         byte b = nbtUtils.getTagType(handle);
-        switch (b) {
+        switch (b)
+        {
             case 1:
                 return new NBTTagByte(true, handle);
             case 2:
@@ -107,8 +59,10 @@ public abstract class NBTBase {
         }
     }
 
-    public static NBTBase getDefault(byte type) {
-        switch (type) {
+    public static NBTBase getDefault(byte type)
+    {
+        switch (type)
+        {
             case 1:
                 return new NBTTagByte();
             case 2:
@@ -136,25 +90,13 @@ public abstract class NBTBase {
         }
     }
 
-    public abstract byte getTypeId();
-
-    public final NBTType getType(){
-        return NBTType.fromByte(getTypeId());
-    }
-
-    public NBTBase clone() {
-        return wrap(nbtUtils.cloneTag(handle));
-    }
-
-    public static Object cloneHandle(Object handle) {
+    public static Object cloneHandle(Object handle)
+    {
         return nbtUtils.cloneTag(handle);
     }
 
-    public Object cloneHandle() {
-        return cloneHandle(handle);
-    }
-
-    public static NBTBase getByValue(Object o) {
+    public static NBTBase getByValue(Object o)
+    {
         if (o == null) return null;
         if (o instanceof NBTBase) return (NBTBase) o;
         if (nbtUtils.isNBTTag(o)) return wrap(o);
@@ -167,22 +109,109 @@ public abstract class NBTBase {
         if (o instanceof byte[]) return new NBTTagByteArray((byte[]) o);
         if (o instanceof CharSequence) return new NBTTagString(o.toString());
         if (o instanceof int[]) return new NBTTagIntArray((int[]) o);
-        if (o instanceof Map){
+        if (o instanceof Map)
+        {
             NBTTagCompound tag = new NBTTagCompound();
-            for(Map.Entry e:((Map<?,?>)o).entrySet()){
+            for (Map.Entry e : ((Map<?, ?>) o).entrySet())
+            {
                 tag.putToHandle(e.toString(), getByValue(e.getValue()));
             }
             return tag;
         }
-        if (o instanceof Object[]) o = Arrays.asList((Object[])o);
-        if (o instanceof List) {
+        if (o instanceof Object[]) o = Arrays.asList((Object[]) o);
+        if (o instanceof List)
+        {
             NBTTagList tag = new NBTTagList();
-            for(Object t:(List)o){
+            for (Object t : (List) o)
+            {
                 tag.add_b(getByValue(t));
             }
             return tag;
         }
         throw new IllegalArgumentException();
+    }
+
+    final public void read(java.io.DataInput input) throws IOException
+    {
+        nbtUtils.readInputToTag(input, handle);
+    }
+
+    final public void write(java.io.DataOutput output) throws IOException
+    {
+        nbtUtils.writeTagDataToOutput(output, handle);
+    }
+
+    final public byte[] toBytes()
+    {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(buffer);
+        try
+        {
+            write(out);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return buffer.toByteArray();
+    }
+
+    final public void fromBytes(byte[] source)
+    {
+        ByteArrayInputStream buffer = new ByteArrayInputStream(source);
+        DataInputStream in = new DataInputStream(buffer);
+        try
+        {
+            read(in);
+        }
+        catch (IOException e)
+        {
+            Bukkit.getLogger().log(Level.ALL, "can not read NBT from bytes", e);
+        }
+    }
+
+    @Override
+    abstract public String toString();
+
+    @Override
+    abstract public int hashCode();
+
+    public Object getHandle()
+    {
+        return handle;
+    }
+
+    public String getName()
+    {
+        return nbtUtils.getTagName(handle);
+    }
+
+    @Deprecated
+    public void setName(String name)
+    {
+        nbtUtils.seTagName(handle, name);
+    }
+
+    NBTBase getDefault()
+    {
+        return getDefault(getTypeId());
+    }
+
+    public abstract byte getTypeId();
+
+    public final NBTType getType()
+    {
+        return NBTType.fromByte(getTypeId());
+    }
+
+    public NBTBase clone()
+    {
+        return wrap(nbtUtils.cloneTag(handle));
+    }
+
+    public Object cloneHandle()
+    {
+        return cloneHandle(handle);
     }
 
 }

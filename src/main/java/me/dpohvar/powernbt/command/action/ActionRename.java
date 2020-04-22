@@ -1,23 +1,24 @@
 package me.dpohvar.powernbt.command.action;
 
 import me.dpohvar.powernbt.PowerNBT;
-import me.dpohvar.powernbt.exception.NBTTagNotFound;
 import me.dpohvar.powernbt.nbt.NBTBase;
 import me.dpohvar.powernbt.nbt.NBTContainer;
-import me.dpohvar.powernbt.utils.NBTQuery;
 import me.dpohvar.powernbt.utils.Caller;
+import me.dpohvar.powernbt.utils.NBTQuery;
 import me.dpohvar.powernbt.utils.NBTViewer;
 
 import java.util.List;
 
-public class ActionRename extends Action {
+public class ActionRename extends Action
+{
 
     private final Caller caller;
     private final Argument arg1;
     private final String name;
     private final NBTQuery query2;
 
-    public ActionRename(Caller caller, String o1, String q1, String name) {
+    public ActionRename(Caller caller, String o1, String q1, String name)
+    {
         this.caller = caller;
         this.arg1 = new Argument(caller, o1, q1);
         this.name = name;
@@ -25,8 +26,10 @@ public class ActionRename extends Action {
     }
 
     @Override
-    public void execute() throws Exception {
-        if (arg1.needPrepare()) {
+    public void execute() throws Exception
+    {
+        if (arg1.needPrepare())
+        {
             arg1.prepare(this, null, null);
             return;
         }
@@ -37,11 +40,13 @@ public class ActionRename extends Action {
         NBTQuery newQuery = new NBTQuery(v);
         NBTBase root = container.getTag();
         NBTBase base = query.get(root);
-        if (base == null) {
+        if (base == null)
+        {
             caller.send(PowerNBT.plugin.translate("fail_rename"));
-        } else {
+        } else
+        {
             root = query.remove(root);
-            root = newQuery.set(root,base);
+            root = newQuery.set(root, base);
             container.setCustomTag(root);
             caller.send(PowerNBT.plugin.translate("success_rename", name) + NBTViewer.getShortValueWithPrefix(base, false));
         }

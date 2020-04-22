@@ -14,10 +14,11 @@ import java.util.logging.Level;
 import static me.dpohvar.powernbt.utils.NBTUtils.nbtUtils;
 import static me.dpohvar.powernbt.utils.ReflectionUtils.*;
 
-public class ChunkUtils {
+public class ChunkUtils
+{
 
     public static ChunkUtils chunkUtils = new ChunkUtils();
-
+    Map<Object, Object> chunkLoaderMap = new WeakHashMap<Object, Object>();
     private RefField fChunkProvider;
     private RefField fChunkLoader;
     private RefField fChunks;
@@ -28,14 +29,14 @@ public class ChunkUtils {
     private RefMethod mLoadEntities;
     private RefMethod mPutToMap;
     private RefMethod mAddEntities;
-    private RefMethod mLoadNearby;
     //private RefConstructor nChunkPacket;
+    private RefMethod mLoadNearby;
 
-    Map<Object,Object> chunkLoaderMap = new WeakHashMap<Object,Object>();
 
-
-    private ChunkUtils(){
-        try {
+    private ChunkUtils()
+    {
+        try
+        {
             //RefClass cChunkPacket = getRefClass("{nms}.PacketPlayOutMapChunk, {nms}.PacketPlayOutMapChunk, {nm}.network.play.server.S21PacketChunkData, {PacketPlayOutMapChunk}");
             RefClass cCraftChunk = getRefClass("{cb}.CraftChunk, {CraftChunk}");
             RefClass cChunk = getRefClass("{nms}.Chunk, {nm}.world.chunk.Chunk, {Chunk}");
@@ -54,10 +55,13 @@ public class ChunkUtils {
             RefClass cNBTTagCompound = getRefClass("{nms}.NBTTagCompound, {nm}.nbt.NBTTagCompound, {NBTTagCompound}");
             mSaveChunk = cChunkRegionLoader.findMethodByParams(cChunk, cWorld, cNBTTagCompound);
             RefClass cLongObjectHashMap;
-            try {
+            try
+            {
                 cLongObjectHashMap = getRefClass("{cb}.util.LongObjectHashMap, {LongObjectHashMap}");
                 fChunks = cChunkProviderServer.findField(cLongObjectHashMap);
-            } catch (RuntimeException ignored) {
+            }
+            catch (RuntimeException ignored)
+            {
                 cLongObjectHashMap = getRefClass("{nm}.util.LongHashMap, {LongHashMap}");
                 fChunks = cChunkProviderServer.findField(cLongObjectHashMap);
             }
@@ -81,16 +85,26 @@ public class ChunkUtils {
                             .withSuffix("c")
             );
             mLoadNearby = cChunk.findMethodByParams(iChunkProvider, iChunkProvider, int.class, int.class);
-        } catch (Exception e){
-            if (PowerNBT.plugin.isDebug()){
+        }
+        catch (Exception e)
+        {
+            if (PowerNBT.plugin.isDebug())
+            {
                 PowerNBT.plugin.getLogger().log(Level.WARNING, "Can't load ChunkUtils!", e);
-            } else {
+            } else
+            {
                 PowerNBT.plugin.getLogger().log(Level.WARNING, "Can't load ChunkUtils!");
             }
         }
     }
 
-    private Object getChunkLoader(Object nmsWorld){
+    public static long toLong(int msw, int lsw)
+    {
+        return ((long) msw << 32) + (long) lsw - -2147483648L;
+    }
+
+    private Object getChunkLoader(Object nmsWorld)
+    {
         Object chunkLoader = chunkLoaderMap.get(nmsWorld);
         if (chunkLoader != null) return chunkLoader;
         Object chunkProvider = fChunkProvider.of(nmsWorld).get();
@@ -99,40 +113,42 @@ public class ChunkUtils {
         return chunkLoader;
     }
 
-    public static long toLong(int msw, int lsw) {
-        return ((long)msw << 32) + (long)lsw - -2147483648L;
-    }
-
-    public void readChunk(Chunk chunk, Object nbtTagCompound){
+    public void readChunk(Chunk chunk, Object nbtTagCompound)
+    {
         Object nmsWorld = mGetWorldHandle.of(chunk.getWorld()).call();
         Object chunkLoader = getChunkLoader(nmsWorld);
         Object nmsChunk = mGetChunkHandle.of(chunk).call();
         mSaveChunk.of(chunkLoader).call(nmsChunk, nmsWorld, nbtTagCompound);
     }
 
-    public void writeChunk(Chunk chunk, Object nbtTagCompound){
+    public void writeChunk(Chunk chunk, Object nbtTagCompound)
+    {
         writeChunk(chunk, nbtTagCompound, false);
     }
 
-    public void writeChunkUnsafe(Chunk chunk, Object nbtTagCompound){
+    public void writeChunkUnsafe(Chunk chunk, Object nbtTagCompound)
+    {
         writeChunk(chunk, nbtTagCompound, true);
     }
 
-    private void writeChunk(Chunk chunk, Object nbtTagCompound, boolean unsafe){
+    private void writeChunk(Chunk chunk, Object nbtTagCompound, boolean unsafe)
+    {
         Object nmsWorld = mGetWorldHandle.of(chunk.getWorld()).call();
         Object chunkProvider = fChunkProvider.of(nmsWorld).get();
         Object chunkLoader = fChunkLoader.of(chunkProvider).get();
         int x = chunk.getX();
         int z = chunk.getZ();
         // remove entities
-        for (Entity entity : chunk.getEntities()) {
-            if ( !(entity instanceof Player) ) entity.remove();
+        for (Entity entity : chunk.getEntities())
+        {
+            if (!(entity instanceof Player)) entity.remove();
         }
         // unload chunk
         chunk.unload();
         // read nbt tag
         nbtTagCompound = nbtUtils.cloneTag(nbtTagCompound);
-        if (!unsafe) {
+        if (!unsafe)
+        {
             Map<String, Object> handleMap = nbtUtils.getHandleMap(nbtTagCompound);
             // fix x,z coordinates
             handleMap.put("xPos", nbtUtils.createTagInt(x));
@@ -159,18 +175,21 @@ public class ChunkUtils {
         task.run();
         Bukkit.getScheduler().runTaskLater(PowerNBT.plugin, task, 2);
         // refresh blocks
-        chunk.getWorld().refreshChunk(x,z);
+        chunk.getWorld().refreshChunk(x, z);
     }
 
-    private void fixEntitiesData(Object nbtList, int x, int z){
-        if (nbtList==null) return;
+    private void fixEntitiesData(Object nbtList, int x, int z)
+    {
+        if (nbtList == null) return;
         List<Object> list = nbtUtils.getHandleList(nbtList);
-        for(Object nbtEntity: list){
-            while (nbtEntity != null) {
+        for (Object nbtEntity : list)
+        {
+            while (nbtEntity != null)
+            {
                 Map<String, Object> entityMap = nbtUtils.getHandleMap(nbtEntity);
                 List<Object> posList = nbtUtils.getHandleList(entityMap.get("Pos"));
-                double posX = (Double) nbtUtils.getValue( posList.get(0) );
-                double posZ = (Double) nbtUtils.getValue( posList.get(2) );
+                double posX = (Double) nbtUtils.getValue(posList.get(0));
+                double posZ = (Double) nbtUtils.getValue(posList.get(2));
                 posList.set(0, nbtUtils.createTagDouble((x << 4) + (posX % 16)));
                 posList.set(2, nbtUtils.createTagDouble((z << 4) + (posZ % 16)));
                 nbtEntity = entityMap.get("Riding");
@@ -179,28 +198,33 @@ public class ChunkUtils {
         }
     }
 
-    private void fixTileEntitiesData(Object nbtList, int x, int z){
-        if (nbtList==null) return;
+    private void fixTileEntitiesData(Object nbtList, int x, int z)
+    {
+        if (nbtList == null) return;
         List<Object> list = nbtUtils.getHandleList(nbtList);
-        for(Object nbtEntity: list){
+        for (Object nbtEntity : list)
+        {
             Map<String, Object> entityMap = nbtUtils.getHandleMap(nbtEntity);
-            int posX = (Integer) nbtUtils.getValue( entityMap.get("x") );
-            int posZ = (Integer) nbtUtils.getValue( entityMap.get("z") );
+            int posX = (Integer) nbtUtils.getValue(entityMap.get("x"));
+            int posZ = (Integer) nbtUtils.getValue(entityMap.get("z"));
             entityMap.put("x", nbtUtils.createTagInt((x << 4) | (posX & 0xf)));
             entityMap.put("z", nbtUtils.createTagInt((z << 4) | (posZ & 0xf)));
         }
     }
 
-    class ChunkReloadTask implements Runnable{
+    class ChunkReloadTask implements Runnable
+    {
 
         private Chunk chunk;
 
-        public ChunkReloadTask(Chunk chunk){
+        public ChunkReloadTask(Chunk chunk)
+        {
             this.chunk = chunk;
         }
 
         @Override
-        public void run() {
+        public void run()
+        {
             chunk.unload();
             chunk.load();
         }

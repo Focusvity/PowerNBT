@@ -15,114 +15,138 @@ import java.util.logging.Level;
 
 import static me.dpohvar.powernbt.PowerNBT.plugin;
 
-public class Caller extends NBTContainer<Caller> {
+public class Caller extends NBTContainer<Caller>
+{
+    private final HashMap<String, NBTContainer> variables = new HashMap<String, NBTContainer>();
     private CommandSender owner;
     private boolean silent;
     private NBTBase base;
     private Argument argument;
     private Action action;
-    private final HashMap<String, NBTContainer> variables = new HashMap<String, NBTContainer>();
 
-    public Argument getArgument() {
+    public Caller(CommandSender owner)
+    {
+        this.owner = owner;
+    }
+
+    public Argument getArgument()
+    {
         return argument;
     }
 
-    public Action getAction() {
+    public Action getAction()
+    {
         return action;
     }
 
-    public void hold(Argument argument, Action action) {
+    public void hold(Argument argument, Action action)
+    {
         this.argument = argument;
         this.action = action;
     }
 
-    public boolean isSilent() {
+    public boolean isSilent()
+    {
         return silent;
     }
 
-    public void setSilent(boolean silent) {
+    public void setSilent(boolean silent)
+    {
         this.silent = silent;
     }
 
-    public CommandSender getOwner() {
+    public CommandSender getOwner()
+    {
         return owner;
     }
 
-    public void setOwner(CommandSender owner) {
+    public void setOwner(CommandSender owner)
+    {
         this.owner = owner;
     }
 
-    public HashMap<String, NBTContainer> getVariables() {
+    public HashMap<String, NBTContainer> getVariables()
+    {
         return variables;
     }
 
-    public NBTContainer getVariable(String name) {
+    public NBTContainer getVariable(String name)
+    {
         return variables.get(name);
     }
 
-    public void setVariable(String name, NBTContainer value) {
+    public void setVariable(String name, NBTContainer value)
+    {
         variables.put(name, value);
     }
 
-    public void removeVariable(String name) {
+    public void removeVariable(String name)
+    {
         variables.remove(name);
     }
 
-    public void send(Object o) {
+    public void send(Object o)
+    {
         if (silent) return;
         String message = plugin.getPrefix() + o;
-        if (message.length()>32743) message = message.substring(0,32743);
+        if (message.length() > 32743) message = message.substring(0, 32743);
         owner.sendMessage(message);
     }
 
-    public void handleException(Throwable o) {
+    public void handleException(Throwable o)
+    {
         String message;
-        if (o.getClass().equals(RuntimeException.class)) {
-             message = plugin.getErrorPrefix() + o.getMessage();
+        if (o.getClass().equals(RuntimeException.class))
+        {
+            message = plugin.getErrorPrefix() + o.getMessage();
 
-        } else {
+        } else
+        {
             message = plugin.getErrorPrefix() +
                     ChatColor.RED.toString() + ChatColor.BOLD +
-                    o.getClass().getSimpleName() + ": " + ChatColor.RESET+ o.getMessage();
+                    o.getClass().getSimpleName() + ": " + ChatColor.RESET + o.getMessage();
         }
-        if (message.length()>32743) message = message.substring(0,32743);
+        if (message.length() > 32743) message = message.substring(0, 32743);
         owner.sendMessage(message);
-        if (plugin.isDebug()) {
+        if (plugin.isDebug())
+        {
             Bukkit.getLogger().log(Level.ALL, message, o);
         }
     }
 
-    public Caller(CommandSender owner) {
-        this.owner = owner;
-    }
-
     @Override
-    public List<String> getTypes() {
+    public List<String> getTypes()
+    {
         return Arrays.asList("entity", "living", "entity_Player");
     }
 
     @Override
-    public Caller getObject() {
+    public Caller getObject()
+    {
         return this;
     }
 
     @Override
-    public NBTBase readTag() {
+    public NBTBase readTag()
+    {
         return this.base;
     }
 
     @Override
-    public void writeTag(NBTBase base) {
+    public void writeTag(NBTBase base)
+    {
         this.base = base;
     }
 
     @Override
-    public Class<Caller> getContainerClass() {
+    public Class<Caller> getContainerClass()
+    {
         return Caller.class;
     }
 
     @Override
-    public void eraseTag() {
+    public void eraseTag()
+    {
         this.base = null;
     }
 }

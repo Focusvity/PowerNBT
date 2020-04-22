@@ -12,18 +12,19 @@ import static me.dpohvar.powernbt.utils.ReflectionUtils.*;
 /**
  * Created by DPOH-VAR on 23.01.14
  */
-public final class NBTBlockUtils {
+public final class NBTBlockUtils
+{
 
     /**
      * static access to utils
      */
     public static final NBTBlockUtils nbtBlockUtils = new NBTBlockUtils();
-
-    private NBTBlockUtils(){}
-
     private RefClass classCraftWorld = getRefClass("{cb}.CraftWorld, {CraftWorld}");
+    private RefClass classWorldServer = getRefClass("{nms}.WorldServer, {nm}.world.WorldServer, {WorldServer}");
     private RefClass classTileEntity = getRefClass("{nms}.TileEntity, {nm}.tileentity.TileEntity, {TileEntity}");
-    private RefMethod getTileEntityAt = classCraftWorld.findMethodByReturnType(classTileEntity); // (int x, int y, int z)
+    private RefClass classBlockPosition = getRefClass("{nms}.BlockPosition, {BlockPosition}");
+    private RefConstructor conBlockPosition = classBlockPosition.getConstructor(int.class, int.class, int.class);
+    private RefMethod getTileEntityAt = classWorldServer.findMethodByReturnType(classTileEntity); // (BlockPosition)
     private RefMethod getUpdatePacket = classTileEntity.findMethodByReturnType(
             "{nms}.PacketPlayOutTileEntityData",
             "{nms}.Packet, {nm}.network.Packet {nm}.network.packet.Packet, {Packet}"
@@ -45,23 +46,32 @@ public final class NBTBlockUtils {
                     .withSuffix("a")
                     .withReturnType(void.class)
     );
+    private RefMethod getHandle = classCraftWorld.findMethodByReturnType(classWorldServer);
+
+    private NBTBlockUtils()
+    {
+    }
 
     /**
      * read NBTTagCompound for block
-     * @param block bukkit block
+     *
+     * @param block    bukkit block
      * @param compound empty compound to read
      */
-    public void readTag(Block block, Object compound){
+    public void readTag(Block block, Object compound)
+    {
         Object tile = getTileEntity(block);
-        if (tile!=null) read.of(tile).call(compound);
+        if (tile != null) read.of(tile).call(compound);
     }
 
     /**
      * set NBTTagCompound to block. Watch for x, y, z
-     * @param block bukkit block
+     *
+     * @param block    bukkit block
      * @param compound NBTTagCompound
      */
-    public void setTag(Block block, Object compound){
+    public void setTag(Block block, Object compound)
+    {
         compound = nbtUtils.cloneTag(compound);
         Map<String, Object> map = nbtUtils.getHandleMap(compound);
         map.put("x", nbtUtils.createTagInt(block.getX()));
@@ -72,27 +82,33 @@ public final class NBTBlockUtils {
 
     /**
      * set NBTTagCompound to block
-     * @param block bukkit block
+     *
+     * @param block    bukkit block
      * @param compound NBTTagCompound
      */
-    public void setTagUnsafe(Block block, Object compound){
+    public void setTagUnsafe(Block block, Object compound)
+    {
         Object tile = getTileEntity(block);
         if (tile != null) write.of(tile).call(compound);
     }
 
     /**
      * send update packet to all nearby players
+     *
      * @param block bukkit block
      */
-    public void update(Block block){
+    public void update(Block block)
+    {
         if (block == null) return;
         Object tile = getTileEntity(block);
         if (tile == null) return;
         Object packet = getUpdatePacket.of(tile).call();
         if (packet == null) return;
         int maxDist = Bukkit.getServer().getViewDistance() * 32;
-        for (Player p : block.getWorld().getPlayers()) {
-            if (p.getLocation().distance(block.getLocation()) < maxDist) {
+        for (Player p : block.getWorld().getPlayers())
+        {
+            if (p.getLocation().distance(block.getLocation()) < maxDist)
+            {
                 PacketUtils.packetUtils.sendPacket(p, packet);
             }
         }
@@ -100,12 +116,12 @@ public final class NBTBlockUtils {
 
     /**
      * Get tile entity at block coordinates
+     *
      * @param block bukkit block
      * @return tile entity
      */
-    public Object getTileEntity(Block block){
-        return getTileEntityAt.of(block.getWorld()).call(block.getX(), block.getY(), block.getZ());
+    public Object getTileEntity(Block block)
+    {
+        return getTileEntityAt.of(getHandle.of(block.getWorld()).call()).call(conBlockPosition.create(block.getX(), block.getY(), block.getZ()));
     }
-
-
 }

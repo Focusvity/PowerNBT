@@ -8,25 +8,29 @@ import org.bukkit.ChatColor;
  * Date: 30.06.13
  * Time: 11:20
  */
-public abstract class SourceException extends RuntimeException {
+public abstract class SourceException extends RuntimeException
+{
     protected String source;
     protected int row, col;
 
-    public SourceException(String source, int row, int col, Throwable reason) {
+    public SourceException(String source, int row, int col, Throwable reason)
+    {
         super(reason);
         this.source = source;
         this.row = row;
         this.col = col;
     }
 
-    public SourceException(String source, int row, int col, String reason) {
+    public SourceException(String source, int row, int col, String reason)
+    {
         super(reason);
         this.source = source;
         this.row = row;
         this.col = col;
     }
 
-    public String getErrorString() {
+    public String getErrorString()
+    {
         if (source == null) return ChatColor.translateAlternateColorCodes('&', "&c[no source]&r");
         String[] lines = source.split("\n");
         if (lines.length == row) return ChatColor.translateAlternateColorCodes('&', "&e[end of source]&r");

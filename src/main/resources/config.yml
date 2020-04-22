@@ -2,12 +2,12 @@ debug: ${plugin-debug}
 lang: system
 ignore_set:
   block:
-  - id
-  - x
-  - y
-  - z
+    - id
+    - x
+    - y
+    - z
   entity:
-  - UUIDMost
-  - UUIDLeast
-  - WorldUUIDLeast
-  - WorldUUIDMost
+    - UUIDMost
+    - UUIDLeast
+    - WorldUUIDLeast
+    - WorldUUIDMost

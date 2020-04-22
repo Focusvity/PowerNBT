@@ -5,25 +5,30 @@ import me.dpohvar.powernbt.utils.ReflectionUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static me.dpohvar.powernbt.utils.EntityUtils.entityUtils;
 
-public class NBTContainerEntity extends NBTContainer<Entity> {
+public class NBTContainerEntity extends NBTContainer<Entity>
+{
 
     Entity entity;
 
-    public NBTContainerEntity(Entity entity) {
+    public NBTContainerEntity(Entity entity)
+    {
         this.entity = entity;
     }
 
-    public Entity getObject() {
+    public Entity getObject()
+    {
         return entity;
     }
 
     @Override
-    public List<String> getTypes() {
+    public List<String> getTypes()
+    {
         List<String> s = new ArrayList<String>();
         s.add("entity");
         if (entity instanceof LivingEntity) s.add("living");
@@ -33,15 +38,19 @@ public class NBTContainerEntity extends NBTContainer<Entity> {
     }
 
     @Override
-    public NBTTagCompound readTag() {
+    public NBTTagCompound readTag()
+    {
         NBTTagCompound tag = new NBTTagCompound();
         entityUtils.readEntity(entity, tag.getHandle());
-        if (ReflectionUtils.isForge()) {
+        if (ReflectionUtils.isForge())
+        {
             Object t = entityUtils.getForgeData(entity);
-            if (t != null) {
-                NBTTagCompound forgeData = new NBTTagCompound(false,t);
+            if (t != null)
+            {
+                NBTTagCompound forgeData = new NBTTagCompound(false, t);
                 tag.put("ForgeData", forgeData);
-            } else {
+            } else
+            {
                 tag.put("ForgeData", new NBTTagCompound());
             }
         }
@@ -49,14 +58,18 @@ public class NBTContainerEntity extends NBTContainer<Entity> {
     }
 
     @Override
-    public void writeTag(NBTBase base) {
+    public void writeTag(NBTBase base)
+    {
         entityUtils.writeEntity(entity, base.getHandle());
-        if (ReflectionUtils.isForge()){
-            Object forgeData = ((NBTTagCompound)base).get("ForgeData");
-            if (forgeData instanceof NBTTagCompound) {
+        if (ReflectionUtils.isForge())
+        {
+            Object forgeData = ((NBTTagCompound) base).get("ForgeData");
+            if (forgeData instanceof NBTTagCompound)
+            {
                 Object data = base.getHandle();
                 entityUtils.writeEntity(entity, NBTUtils.nbtUtils.cloneTag(data));
-            } else {
+            } else
+            {
                 entityUtils.setForgeData(entity, NBTUtils.nbtUtils.createTagCompound());
             }
         }
@@ -64,12 +77,14 @@ public class NBTContainerEntity extends NBTContainer<Entity> {
     }
 
     @Override
-    protected Class<Entity> getContainerClass() {
+    protected Class<Entity> getContainerClass()
+    {
         return Entity.class;
     }
 
     @Override
-    public String toString(){
+    public String toString()
+    {
         if (entity instanceof Player) return ((Player) entity).getDisplayName();
         else return entity.getType().toString();
     }

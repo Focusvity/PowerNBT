@@ -6,7 +6,8 @@ import static me.dpohvar.powernbt.utils.ReflectionUtils.*;
  * @deprecated use {@link me.dpohvar.powernbt.utils.NBTParser}
  */
 @Deprecated
-public class MojangsonUtils {
+public class MojangsonUtils
+{
 
     public static MojangsonUtils mojangsonUtils = new MojangsonUtils();
 
@@ -15,9 +16,12 @@ public class MojangsonUtils {
     private RefMethod mGetParser = cMojangsonParser.findMethodByParams(String.class, String.class);
     private RefMethod mParse = cMojangsonTypeParser.findMethodByReturnType("{nms}.NBTBase, {nm}.nbt.NBTBase, {NBTBase}");
 
-    private MojangsonUtils(){}
+    private MojangsonUtils()
+    {
+    }
 
-    public Object parseString(String tagName, String value){
+    public Object parseString(String tagName, String value)
+    {
         Object parser = mGetParser.call(tagName, value);
         return mParse.of(parser).call();
     }

@@ -7,49 +7,59 @@ import static me.dpohvar.powernbt.utils.NBTUtils.nbtUtils;
  *
  * @author DPOH-VAR
  */
-public class NBTTagString extends NBTTagDatable<String> {
+public class NBTTagString extends NBTTagDatable<String>
+{
     public static final byte typeId = 8;
 
-    public NBTTagString() {
+    public NBTTagString()
+    {
         this("");
     }
 
-    public NBTTagString(String b) {
-        super(nbtUtils.createTag(b,typeId));
+    public NBTTagString(String b)
+    {
+        super(nbtUtils.createTag(b, typeId));
     }
 
-    public NBTTagString(String ignored, String b) {
+    public NBTTagString(String ignored, String b)
+    {
         this(b);
     }
 
-    NBTTagString(boolean ignored, Object tag) {
+    NBTTagString(boolean ignored, Object tag)
+    {
         super(tag);
-        if (nbtUtils.getTagType(tag)!=typeId) throw new IllegalArgumentException();
+        if (nbtUtils.getTagType(tag) != typeId) throw new IllegalArgumentException();
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (o instanceof NBTBase) o = ((NBTBase) o).getHandle();
         return handle.equals(o);
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return handle.hashCode();
     }
 
     @Override
-    public String get() {
+    public String get()
+    {
         return (String) super.get();
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return get();
     }
 
     @Override
-    public byte getTypeId() {
+    public byte getTypeId()
+    {
         return 8;
     }
 

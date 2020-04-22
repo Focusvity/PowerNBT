@@ -5,18 +5,14 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.TreeMap;
 
-public class Tokenizer {
-    private enum Mode {
-        OPERAND, LINE_COMMENT, FULL_COMMENT, TEXT,
-    }
-
+public class Tokenizer
+{
     private String lineComment;
     private String openComment;
     private String closeComment;
     private HashSet<Character> quotes = new HashSet<Character>();
     private HashSet<Character> singleChars = new HashSet<Character>();
     private HashSet<Character> delimiters = new HashSet<Character>();
-
     public Tokenizer(
             String lineComment,
             String openComment,
@@ -24,7 +20,8 @@ public class Tokenizer {
             Collection<Character> quotes,
             Collection<Character> singleChars,
             Collection<Character> delimiters
-    ) {
+    )
+    {
         this.lineComment = lineComment;
         this.openComment = openComment;
         this.closeComment = closeComment;
@@ -33,114 +30,147 @@ public class Tokenizer {
         if (delimiters != null) this.delimiters = new HashSet<Character>(delimiters);
     }
 
-    private boolean isQuote(char c) {
+    private boolean isQuote(char c)
+    {
         return quotes.contains(c);
     }
 
-    private boolean isSingleChar(char c) {
+    private boolean isSingleChar(char c)
+    {
         return singleChars.contains(c);
     }
 
-    private boolean isDelimiter(char c) {
+    private boolean isDelimiter(char c)
+    {
         return delimiters.contains(c);
     }
 
-    private boolean isOpenComment(String s, char c) {
+    private boolean isOpenComment(String s, char c)
+    {
         return isOpenComment(s + c);
     }
 
-    private boolean isOpenComment(String s) {
+    private boolean isOpenComment(String s)
+    {
         return openComment != null && openComment.equals(s);
     }
 
-    private boolean isCloseComment(String s, char c) {
+    private boolean isCloseComment(String s, char c)
+    {
         return isCloseComment(s + c);
     }
 
-    private boolean isCloseComment(String s) {
+    private boolean isCloseComment(String s)
+    {
         return closeComment != null && closeComment.equals(s);
     }
 
-    private boolean isLineComment(String s, char c) {
+    private boolean isLineComment(String s, char c)
+    {
         return isLineComment(s + c);
     }
 
-    private boolean isLineComment(String s) {
+    private boolean isLineComment(String s)
+    {
         return lineComment != null && lineComment.equals(s);
     }
 
-    public TreeMap<Integer, String> tokenize(String inputString) {
+    public TreeMap<Integer, String> tokenize(String inputString)
+    {
         VarCharInputStream input = new VarCharInputStream(inputString);
         TreeMap<Integer, String> tokens = new TreeMap<Integer, String>();
         Mode mode = Mode.OPERAND;
         VarStringBuffer buffer = new VarStringBuffer();
         char quote = 0;
         tokenizer:
-        while (true) {
+        while (true)
+        {
             int position = input.getPosition();
             Character c = input.read();
-            switch (mode) {
-                case OPERAND: {
-                    if (c == null) {
+            switch (mode)
+            {
+                case OPERAND:
+                {
+                    if (c == null)
+                    {
                         if (buffer.hasSome()) tokens.put(position - buffer.length(), buffer.toString());
                         break tokenizer;
-                    } else if (isOpenComment(buffer.toString(), c)) {
+                    } else if (isOpenComment(buffer.toString(), c))
+                    {
                         buffer.clear();
                         mode = Mode.FULL_COMMENT;
-                    } else if (isLineComment(buffer.toString(), c)) {
+                    } else if (isLineComment(buffer.toString(), c))
+                    {
                         buffer.clear();
                         mode = Mode.LINE_COMMENT;
-                    } else if (isDelimiter(c)) {
+                    } else if (isDelimiter(c))
+                    {
                         if (buffer.hasSome()) tokens.put(position - buffer.length(), buffer.toString());
                         buffer.clear();
-                    } else if (isQuote(c)) {
+                    } else if (isQuote(c))
+                    {
                         buffer.append(c);
                         quote = c;
                         mode = Mode.TEXT;
-                    } else if (isSingleChar(c)) {
+                    } else if (isSingleChar(c))
+                    {
                         if (buffer.hasSome()) tokens.put(position - buffer.length(), buffer.toString());
                         tokens.put(position - 1, c.toString());
                         buffer.clear();
-                    } else {
+                    } else
+                    {
                         buffer.append(c);
                     }
                     break;
                 }
-                case TEXT: {
-                    if (c == null) {
+                case TEXT:
+                {
+                    if (c == null)
+                    {
                         throw new RuntimeException("missing " + quote + " : " + buffer.toString());
                     }
-                    if (c == '\\') {
+                    if (c == '\\')
+                    {
                         buffer.append(c);
                         buffer.append(input.read());
-                    } else if (c == quote) {
+                    } else if (c == quote)
+                    {
                         buffer.append(c);
                         mode = Mode.OPERAND;
-                    } else {
+                    } else
+                    {
                         buffer.append(c);
                     }
                     break;
                 }
-                case FULL_COMMENT: {
+                case FULL_COMMENT:
+                {
                     VarStringBuffer buf = new VarStringBuffer();
-                    while (true) {
+                    while (true)
+                    {
                         Character t = input.read();
-                        if (t == null) {
+                        if (t == null)
+                        {
                             throw new RuntimeException("missing " + closeComment);
-                        } else if (isDelimiter(t)) {
+                        } else if (isDelimiter(t))
+                        {
                             if (isCloseComment(buf.toString())) break;
                             buf.clear();
-                        } else {
+                        } else
+                        {
                             buf.append(t);
                         }
                     }
                     mode = Mode.OPERAND;
                     break;
                 }
-                case LINE_COMMENT: {
-                    while (true) {
+                case LINE_COMMENT:
+                {
+                    while (true)
+                    {
                         Character t = input.read();
-                        if (t == null || t == '\n') {
+                        if (t == null || t == '\n')
+                        {
                             mode = Mode.OPERAND;
                             break;
                         }
@@ -152,20 +182,28 @@ public class Tokenizer {
         return tokens;
     }
 
+    private enum Mode
+    {
+        OPERAND, LINE_COMMENT, FULL_COMMENT, TEXT,
+    }
 
-    private class VarCharInputStream {
+    private class VarCharInputStream
+    {
         private char[] c;
         private int p = 0;
 
-        public VarCharInputStream(String s) {
+        public VarCharInputStream(String s)
+        {
             c = s.toCharArray();
         }
 
-        public int getPosition() {
+        public int getPosition()
+        {
             return p;
         }
 
-        public Character read() {
+        public Character read()
+        {
             Character x = null;
             if (p < c.length) x = c[p];
             p++;
@@ -173,26 +211,32 @@ public class Tokenizer {
         }
     }
 
-    private class VarStringBuffer {
+    private class VarStringBuffer
+    {
         private ArrayList<Character> a = new ArrayList<Character>();
 
-        public void append(Character c) {
+        public void append(Character c)
+        {
             a.add(c);
         }
 
-        public int length() {
+        public int length()
+        {
             return a.size();
         }
 
-        public void clear() {
+        public void clear()
+        {
             a.clear();
         }
 
-        public boolean hasSome() {
+        public boolean hasSome()
+        {
             return !a.isEmpty();
         }
 
-        public String toString() {
+        public String toString()
+        {
             int s = a.size();
             char[] c = new char[s];
             int i = 0;

@@ -11,12 +11,10 @@ import static me.dpohvar.powernbt.utils.StringParser.Mode.*;
  * Date: 25.07.13
  * Time: 1:35
  */
-public class StringParser {
-    public static enum Mode {
-        CHAR, ESCAPE, UNICODE, SPACE
-    }
-
-    public static String parse(String input) throws ParseException {
+public class StringParser
+{
+    public static String parse(String input) throws ParseException
+    {
         char[] chars = input.toCharArray();
         StringBuilder buffer = new StringBuilder();
         StringBuilder unicode = new StringBuilder();
@@ -24,35 +22,47 @@ public class StringParser {
         int row = 0;
         int col = -1;
         parse:
-        for (char c : chars) {
-            if (c == '\n') {
+        for (char c : chars)
+        {
+            if (c == '\n')
+            {
                 col = 0;
                 row++;
-            } else {
+            } else
+            {
                 col++;
             }
-            switch (mode) {
-                case CHAR: {
-                    switch (c) {
-                        case '\\': {
+            switch (mode)
+            {
+                case CHAR:
+                {
+                    switch (c)
+                    {
+                        case '\\':
+                        {
                             mode = ESCAPE;
                             continue parse;
                         }
-                        case '&': {
+                        case '&':
+                        {
                             buffer.append(ChatColor.COLOR_CHAR);
                             continue parse;
                         }
-                        case '\"': {
+                        case '\"':
+                        {
                             throw new ParseException(input, row, col, "unescaped '\"'");
                         }
-                        default: {
+                        default:
+                        {
                             buffer.append(c);
                             continue parse;
                         }
                     }
                 }
-                case ESCAPE: {
-                    switch (c) {
+                case ESCAPE:
+                {
+                    switch (c)
+                    {
                         case '\\':
                             buffer.append('\\');
                             break;
@@ -107,30 +117,36 @@ public class StringParser {
                         case '_':
                             buffer.append(' ');
                             break;
-                        case 'u': {
+                        case 'u':
+                        {
                             mode = UNICODE;
                             continue parse;
                         }
                         case ' ':
-                        case '\t': {
+                        case '\t':
+                        {
                             mode = SPACE;
                             continue parse;
                         }
                         case '\r':
-                        case '\n': {
+                        case '\n':
+                        {
                             buffer.append(c);
                             mode = SPACE;
                             continue parse;
                         }
-                        default: {
+                        default:
+                        {
                             throw new ParseException(input, row, col, "can't escape symbol " + c);
                         }
                     }
                     mode = CHAR;
                     continue parse;
                 }
-                case UNICODE: {
-                    switch (c) {
+                case UNICODE:
+                {
+                    switch (c)
+                    {
                         case '0':
                         case '1':
                         case '2':
@@ -152,9 +168,11 @@ public class StringParser {
                         case 'c':
                         case 'd':
                         case 'e':
-                        case 'f': {
+                        case 'f':
+                        {
                             unicode.append(c);
-                            if (unicode.length() == 4) {
+                            if (unicode.length() == 4)
+                            {
                                 char character = (char) Integer.parseInt(unicode.toString(), 16);
                                 buffer.append(character);
                                 unicode = new StringBuilder();
@@ -162,30 +180,38 @@ public class StringParser {
                             }
                             continue parse;
                         }
-                        default: {
+                        default:
+                        {
                             throw new ParseException(input, row, col, "unexpected hex character: " + c);
                         }
                     }
                 }
-                case SPACE: {
-                    switch (c) {
+                case SPACE:
+                {
+                    switch (c)
+                    {
                         case '\t':
                         case '\r':
-                        case ' ': {
+                        case ' ':
+                        {
                             continue parse;
                         }
-                        case '\n': {
+                        case '\n':
+                        {
                             buffer.append(c);
                             continue parse;
                         }
-                        case '\\': {
+                        case '\\':
+                        {
                             mode = ESCAPE;
                             continue parse;
                         }
-                        case '\"': {
+                        case '\"':
+                        {
                             throw new ParseException(input, row, col, "unescaped '\"'");
                         }
-                        default: {
+                        default:
+                        {
                             buffer.append(c);
                             mode = CHAR;
                             continue parse;
@@ -193,7 +219,8 @@ public class StringParser {
 
                     }
                 }
-                default: {
+                default:
+                {
                     throw new ParseException(input, row, col, "unknown");
                 }
             }
@@ -202,17 +229,23 @@ public class StringParser {
         else throw new ParseException(input, row, col, "unexpected end of string");
     }
 
-    public static String wrap(String raw) {
+    public static String wrap(String raw)
+    {
         return raw
-            .replace("\\", "\\\\")
-            .replace("\n", "\\n")
-            .replace("\b", "\\b")
-            .replace("\r", "\\r")
-            .replace("\t", "\\t")
-            .replace("\f", "\\f")
-            .replace("\"", "\\\"")
-            .replace("&", "\\&")
-            .replace(String.valueOf(ChatColor.COLOR_CHAR), "&")
-        ;
+                .replace("\\", "\\\\")
+                .replace("\n", "\\n")
+                .replace("\b", "\\b")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t")
+                .replace("\f", "\\f")
+                .replace("\"", "\\\"")
+                .replace("&", "\\&")
+                .replace(String.valueOf(ChatColor.COLOR_CHAR), "&")
+                ;
+    }
+
+    public static enum Mode
+    {
+        CHAR, ESCAPE, UNICODE, SPACE
     }
 }

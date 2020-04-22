@@ -10,73 +10,104 @@ import static me.dpohvar.powernbt.utils.NBTUtils.nbtUtils;
  *
  * @author DPOH-VAR
  */
-public class NBTTagByteArray extends NBTTagNumericArray<Byte> {
+public class NBTTagByteArray extends NBTTagNumericArray<Byte>
+{
     public static final byte typeId = 7;
 
-    public NBTTagByteArray() {
+    public NBTTagByteArray()
+    {
         this(new byte[0]);
     }
 
-    public NBTTagByteArray(String ignored) {
+    public NBTTagByteArray(String ignored)
+    {
         this(new byte[0]);
     }
 
-    public NBTTagByteArray(byte[] b) {
-        super(nbtUtils.createTag(b,typeId));
+    public NBTTagByteArray(byte[] b)
+    {
+        super(nbtUtils.createTag(b, typeId));
     }
 
-    public NBTTagByteArray(String ignored, byte[] b) {
+    public NBTTagByteArray(String ignored, byte[] b)
+    {
         this(b);
     }
 
-    public NBTTagByteArray(boolean ignored, Object tag) {
+    public NBTTagByteArray(boolean ignored, Object tag)
+    {
         super(tag);
-        if (nbtUtils.getTagType(tag)!=typeId) throw new IllegalArgumentException();
+        if (nbtUtils.getTagType(tag) != typeId) throw new IllegalArgumentException();
     }
 
-    public boolean equals(Object o) {
+    public static ArrayList<Byte> byteArrToList(byte[] in)
+    {
+        ArrayList<Byte> temp = new ArrayList<Byte>(in.length);
+        for (byte anIn : in) temp.add(anIn);
+        return temp;
+    }
+
+    public static byte[] listToByteArr(Collection<Byte> in)
+    {
+        byte[] temp = new byte[in.size()];
+        int i = 0;
+        for (Byte anIn : in) temp[i++] = anIn;
+        return temp;
+    }
+
+    public boolean equals(Object o)
+    {
         if (o instanceof NBTBase) o = ((NBTBase) o).getHandle();
         return handle.equals(o);
     }
 
-    public int hashCode() {
+    public int hashCode()
+    {
         return handle.hashCode();
     }
 
-    public byte[] get() {
+    public byte[] get()
+    {
         return (byte[]) super.get();
     }
 
     @Override
-    public void set(Object value) {
+    public void set(Object value)
+    {
         nbtUtils.setValue(handle, value);
     }
 
-    public void set(byte[] value) {
-        set((Object)value);
+    public void set(byte[] value)
+    {
+        set((Object) value);
     }
 
-    public int size() {
+    public int size()
+    {
         return get().length;
     }
 
     @Override
-    public boolean contains(Object o) {
+    public boolean contains(Object o)
+    {
         return byteArrToList(get()).contains(o);
     }
 
-    public Byte get(int i) {
+    public Byte get(int i)
+    {
         byte[] array = get();
         if (i >= array.length) return null;
         return array[i];
     }
 
-    public Byte set(int i, Number value) {
+    public Byte set(int i, Number value)
+    {
         Byte res = get(i);
         byte[] array = get();
         List<Byte> list = new LinkedList<Byte>();
         for (byte b : array) list.add(b);
-        while (list.size() <= i) {
+        while (list.size() <= i)
+        {
             list.add((byte) 0);
         }
         list.set(i, value.byteValue());
@@ -87,13 +118,15 @@ public class NBTTagByteArray extends NBTTagNumericArray<Byte> {
         return res;
     }
 
-    public Byte remove(int i) {
+    public Byte remove(int i)
+    {
         Byte res = get(i);
         byte[] array = get();
         if (i < 0 || i >= array.length) return res;
         List<Byte> list = new LinkedList<Byte>();
         for (byte b : array) list.add(b);
-        while (list.size() <= i) {
+        while (list.size() <= i)
+        {
             list.add((byte) 0);
         }
         list.remove(i);
@@ -105,28 +138,33 @@ public class NBTTagByteArray extends NBTTagNumericArray<Byte> {
     }
 
     @Override
-    public int indexOf(Object o) {
+    public int indexOf(Object o)
+    {
         return byteArrToList(get()).indexOf(o);
     }
 
     @Override
-    public int lastIndexOf(Object o) {
+    public int lastIndexOf(Object o)
+    {
         return byteArrToList(get()).lastIndexOf(o);
     }
 
     @Override
-    public List<Byte> subList(int fromIndex, int toIndex) {
-        byte[] r = new byte[toIndex-fromIndex];
-        int t=0;
+    public List<Byte> subList(int fromIndex, int toIndex)
+    {
+        byte[] r = new byte[toIndex - fromIndex];
+        int t = 0;
         byte[] s = get();
-        for(int i = fromIndex; i<toIndex;i++){
+        for (int i = fromIndex; i < toIndex; i++)
+        {
             r[t++] = s[i];
         }
         return new NBTTagByteArray(r);
     }
 
     @Override
-    public boolean add(Number value) {
+    public boolean add(Number value)
+    {
         byte[] array = get();
         List<Byte> list = new LinkedList<Byte>();
         for (byte b : array) list.add(b);
@@ -139,62 +177,57 @@ public class NBTTagByteArray extends NBTTagNumericArray<Byte> {
     }
 
     @Override
-    public boolean remove(Object o) {
+    public boolean remove(Object o)
+    {
         List<Byte> bytes = byteArrToList(get());
         boolean result = bytes.remove(o);
-        if(result){
+        if (result)
+        {
             set(listToByteArr(bytes));
         }
         return result;
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(Collection<?> c)
+    {
         List<Byte> bytes = byteArrToList(get());
         boolean result = bytes.removeAll(c);
-        if(result){
+        if (result)
+        {
             set(listToByteArr(bytes));
         }
         return result;
     }
 
     @Override
-    public boolean retainAll(Collection<?> c) {
+    public boolean retainAll(Collection<?> c)
+    {
         List<Byte> bytes = byteArrToList(get());
         boolean result = bytes.retainAll(c);
-        if(result){
+        if (result)
+        {
             set(listToByteArr(bytes));
         }
         return result;
     }
 
     @Override
-    public void clear() {
+    public void clear()
+    {
         set(new byte[0]);
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return Arrays.toString(get());
     }
 
     @Override
-    public byte getTypeId() {
+    public byte getTypeId()
+    {
         return typeId;
-    }
-
-
-
-    public static ArrayList<Byte> byteArrToList(byte[] in) {
-        ArrayList<Byte> temp = new ArrayList<Byte>(in.length);
-        for (byte anIn : in) temp.add(anIn);
-        return temp;
-    }
-
-    public static byte[] listToByteArr(Collection<Byte> in) {
-        byte[] temp = new byte[in.size()];
-        int i=0; for (Byte anIn : in) temp[i++] = anIn;
-        return temp;
     }
 
 }

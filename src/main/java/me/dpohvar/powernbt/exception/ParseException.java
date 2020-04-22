@@ -6,19 +6,24 @@ package me.dpohvar.powernbt.exception;
  * Date: 25.06.13
  * Time: 2:12
  */
-public class ParseException extends SourceException {
+public class ParseException extends SourceException
+{
 
-    public ParseException(String string, int row, int col, String reason) {
+    public ParseException(String string, int row, int col, String reason)
+    {
         super(string, row, col, reason);
     }
 
     @Override
-    public String getMessage() {
+    public String getMessage()
+    {
         String msg, reason;
-        if (getCause() == null) {
+        if (getCause() == null)
+        {
             msg = super.getMessage();
             reason = "";
-        } else {
+        } else
+        {
             msg = getCause().getMessage();
             reason = getCause().getClass().getSimpleName();
 

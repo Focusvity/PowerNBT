@@ -9,12 +9,14 @@ import java.util.logging.Level;
 
 import static me.dpohvar.powernbt.PowerNBT.plugin;
 
-public class NBTContainerFileCustom extends NBTContainer<File> {
+public class NBTContainerFileCustom extends NBTContainer<File>
+{
 
     String name;
     File file;
 
-    public NBTContainerFileCustom(String name) {
+    public NBTContainerFileCustom(String name)
+    {
         this.name = name;
         if (name.contains(".") || name.contains(File.separator))
             throw new RuntimeException(plugin.translate("error_customfile", name));
@@ -22,40 +24,56 @@ public class NBTContainerFileCustom extends NBTContainer<File> {
     }
 
     @Override
-    public File getObject() {
+    public File getObject()
+    {
         return file;
     }
 
     @Override
-    public List<String> getTypes() {
+    public List<String> getTypes()
+    {
         return new ArrayList<String>();
     }
 
     @Override
-    public NBTBase readTag() {
+    public NBTBase readTag()
+    {
         DataInputStream input = null;
-        try {
+        try
+        {
             input = new DataInputStream(new FileInputStream(file));
             NBTTagCompound compound = NBTTagCompound.readGZip(input);
             return compound.get("Data");
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e)
+        {
             return null;
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(),e);
-        } finally {
-            if (input != null) try{
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        finally
+        {
+            if (input != null) try
+            {
                 input.close();
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 Bukkit.getLogger().log(Level.ALL, "can not close NBT file " + file, e);
             }
         }
     }
 
     @Override
-    public void writeTag(NBTBase data) {
+    public void writeTag(NBTBase data)
+    {
         DataOutputStream output = null;
-        try {
-            if (!file.exists()) {
+        try
+        {
+            if (!file.exists())
+            {
                 new File(file.getParent()).mkdirs();
                 file.createNewFile();
             }
@@ -65,31 +83,43 @@ public class NBTContainerFileCustom extends NBTContainer<File> {
             output = new DataOutputStream(new FileOutputStream(file));
             compound.writeGZip(output);
 
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e)
+        {
             throw new RuntimeException(plugin.translate("error_nofile", file.getName()), e);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new RuntimeException("IO error", e);
-        } finally {
-            if (output != null) try {
+        }
+        finally
+        {
+            if (output != null) try
+            {
                 output.close();
-            } catch (IOException e) {
-                Bukkit.getLogger().log(Level.ALL, "can not close NBT file "+file, e);
+            }
+            catch (IOException e)
+            {
+                Bukkit.getLogger().log(Level.ALL, "can not close NBT file " + file, e);
             }
         }
     }
 
     @Override
-    public void eraseTag() {
+    public void eraseTag()
+    {
         file.delete();
     }
 
     @Override
-    protected Class<File> getContainerClass() {
+    protected Class<File> getContainerClass()
+    {
         return File.class;
     }
 
     @Override
-    public String toString(){
+    public String toString()
+    {
         return "$$" + name;
     }
 }

@@ -7,59 +7,71 @@ import static me.dpohvar.powernbt.utils.NBTUtils.nbtUtils;
  *
  * @author DPOH-VAR
  */
-public class NBTTagLong extends NBTTagNumeric<Long> {
+public class NBTTagLong extends NBTTagNumeric<Long>
+{
     public static final byte typeId = 4;
 
-    public NBTTagLong() {
+    public NBTTagLong()
+    {
         this(0);
     }
 
-    public NBTTagLong(String ignored) {
+    public NBTTagLong(String ignored)
+    {
         this(0);
     }
 
-    public NBTTagLong(long b) {
+    public NBTTagLong(long b)
+    {
         super(nbtUtils.createTag(b, typeId));
     }
 
-    public NBTTagLong(String ignored, long b) {
+    public NBTTagLong(String ignored, long b)
+    {
         this(b);
     }
 
 
-    NBTTagLong(boolean ignored, Object tag) {
+    NBTTagLong(boolean ignored, Object tag)
+    {
         super(tag);
-        if (nbtUtils.getTagType(tag)!=typeId) throw new IllegalArgumentException();
+        if (nbtUtils.getTagType(tag) != typeId) throw new IllegalArgumentException();
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (o instanceof NBTBase) o = ((NBTBase) o).getHandle();
         return handle.equals(o);
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return handle.hashCode();
     }
 
     @Override
-    public Long get() {
+    public Long get()
+    {
         return (Long) nbtUtils.getValue(handle);
     }
 
     @Override
-    public void set(Long value) {
+    public void set(Long value)
+    {
         nbtUtils.setValue(handle, value);
     }
 
     @Override
-    public void setNumber(Number value){
+    public void setNumber(Number value)
+    {
         set(value.longValue());
     }
 
     @Override
-    public byte getTypeId() {
+    public byte getTypeId()
+    {
         return typeId;
     }
 

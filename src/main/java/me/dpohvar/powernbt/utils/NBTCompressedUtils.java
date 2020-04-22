@@ -8,7 +8,8 @@ import static me.dpohvar.powernbt.utils.ReflectionUtils.*;
 /**
  * access to NBTCompressedStreamTools
  */
-public class NBTCompressedUtils {
+public class NBTCompressedUtils
+{
 
     /**
      * static access to util
@@ -26,19 +27,23 @@ public class NBTCompressedUtils {
 
     /**
      * Read NBT compound from input stream
+     *
      * @param input input stream
      * @return read compound
      */
-    public Object readCompound(InputStream input){
+    public Object readCompound(InputStream input)
+    {
         return readInputStream.call(input);
     }
 
     /**
      * Store NBT compound to output stream
+     *
      * @param nbtTagCompound NBT compound
-     * @param output output stream
+     * @param output         output stream
      */
-    public void writeCompound(Object nbtTagCompound, OutputStream output){
+    public void writeCompound(Object nbtTagCompound, OutputStream output)
+    {
         writeToOutputStream.call(nbtTagCompound, output);
     }
 

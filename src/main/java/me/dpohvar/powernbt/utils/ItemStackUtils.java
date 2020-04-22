@@ -4,13 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import static me.dpohvar.powernbt.utils.NBTUtils.nbtUtils;
 
 import java.util.logging.Level;
 
+import static me.dpohvar.powernbt.utils.NBTUtils.nbtUtils;
 import static me.dpohvar.powernbt.utils.ReflectionUtils.*;
 
-public final class ItemStackUtils {
+public final class ItemStackUtils
+{
 
     /**
      * static access to utils
@@ -32,8 +33,10 @@ public final class ItemStackUtils {
     private RefConstructor conCraftItemStack;
     private RefClass classItemMeta;
 
-    private ItemStackUtils(){
-        try {
+    private ItemStackUtils()
+    {
+        try
+        {
             asNMSCopy = classCraftItemStack.findMethod(new MethodCondition()
                     .withTypes(ItemStack.class)
                     .withReturnType(classItemStack)
@@ -42,33 +45,45 @@ public final class ItemStackUtils {
                     .withTypes(classItemStack)
                     .withReturnType(classCraftItemStack)
             );
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             conNmsItemStack = classItemStack.getConstructor(int.class, int.class, int.class);
             conCraftItemStack = classCraftItemStack.getConstructor(classItemStack);
         }
-        try {
+        try
+        {
             classItemMeta = getRefClass("org.bukkit.inventory.meta.ItemMeta");
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             classItemMeta = null;
         }
-        try {
+        try
+        {
             createStack = classItemStack.findMethod(
                     new MethodCondition().withStatic(true).withTypes(nbtUtils.getNBTCompoundRefClass()).withReturnType(classItemStack)
             );
-        } catch (Exception e){
+        }
+        catch (Exception e)
+        {
             createStack = null;
         }
-        try {
+        try
+        {
             save = classItemStack.findMethod(
                     new MethodCondition()
                             .withStatic(false)
                             .withTypes(nbtUtils.getNBTCompoundRefClass())
                             .withReturnType(nbtUtils.getNBTCompoundRefClass())
             );
-        } catch (Exception e){
+        }
+        catch (Exception e)
+        {
             save = null;
         }
-        try {
+        try
+        {
             write = classItemStack.findMethod(
                     new MethodCondition()
                             .withStatic(false)
@@ -76,66 +91,82 @@ public final class ItemStackUtils {
                             .withReturnType(void.class)
                             .withName("load")
             );
-        } catch (Exception e){
+        }
+        catch (Exception e)
+        {
             write = null;
         }
 
     }
 
-    private Object getTag(Object nmsItemStack) {
+    private Object getTag(Object nmsItemStack)
+    {
         return tag.of(nmsItemStack).get();
     }
 
     @SuppressWarnings("unchecked")
-    private void setTag(Object nmsItemStack, Object nbtTagCompound) {
+    private void setTag(Object nmsItemStack, Object nbtTagCompound)
+    {
         tag.of(nmsItemStack).set(nbtTagCompound);
     }
 
     @SuppressWarnings("deprecation")
-    public Object createNmsItemStack( ItemStack itemStack){
-        if (asNMSCopy != null) {
+    public Object createNmsItemStack(ItemStack itemStack)
+    {
+        if (asNMSCopy != null)
+        {
             return asNMSCopy.call(itemStack);
-        } else {
-            int type = itemStack.getTypeId();
+        } else
+        {
+            String name = itemStack.getType().name();
             int amount = itemStack.getAmount();
             int data = itemStack.getData().getData();
-            return conNmsItemStack.create(type, amount, data);
+            return conNmsItemStack.create(name, amount, data);
         }
     }
 
-    public ItemStack createCraftItemStack(Object nmsItemStack){
-        if (asCraftMirror != null) {
+    public ItemStack createCraftItemStack(Object nmsItemStack)
+    {
+        if (asCraftMirror != null)
+        {
             return (ItemStack) asCraftMirror.call(nmsItemStack);
-        } else {
+        } else
+        {
             return (ItemStack) conCraftItemStack.create(nmsItemStack);
         }
     }
 
-    public Object createNMSItemStackFromNBT(Object nbtTagCompound){
+    public Object createNMSItemStackFromNBT(Object nbtTagCompound)
+    {
         ItemStack itemStack = createCraftItemStack(new ItemStack(Material.APPLE));
         Object nmsItemStack = getHandle(itemStack);
         this.writeNMSItemStack(nmsItemStack, nbtTagCompound);
         return nmsItemStack;
     }
 
-    public ItemStack createCraftItemStackFromNBT(Object nbtTagCompound){
+    public ItemStack createCraftItemStackFromNBT(Object nbtTagCompound)
+    {
         return createCraftItemStack(createNMSItemStackFromNBT(nbtTagCompound));
     }
 
-    private Object getHandle(ItemStack cbItemStack){
+    private Object getHandle(ItemStack cbItemStack)
+    {
         return itemHandle.of(cbItemStack).get();
     }
 
-    public ItemStack createCraftItemStack(ItemStack item){
+    public ItemStack createCraftItemStack(ItemStack item)
+    {
         return createCraftItemStack(createNmsItemStack(item));
     }
 
-    public void setTag(ItemStack itemStack, Object nbtTagCompound){
+    public void setTag(ItemStack itemStack, Object nbtTagCompound)
+    {
         if (classCraftItemStack.isInstance(itemStack)) setTagCB(itemStack, nbtTagCompound);
         else if (classItemMeta != null) setTagOrigin(itemStack, nbtTagCompound);
     }
 
-    public Object getTag(ItemStack itemStack){
+    public Object getTag(ItemStack itemStack)
+    {
         // if (classCraftItemStack.isInstance(itemStack)) return getTagCB(itemStack);
         Object nmsItemStack = tryGetNMSHandleItemStack(itemStack);
         if (nmsItemStack != null) return getTag(nmsItemStack);
@@ -143,35 +174,42 @@ public final class ItemStackUtils {
         else return null;
     }
 
-    private Object tryGetNMSHandleItemStack(ItemStack itemStack){
-        if ( !classCraftItemStack.isInstance(itemStack) ) return null;
+    private Object tryGetNMSHandleItemStack(ItemStack itemStack)
+    {
+        if (!classCraftItemStack.isInstance(itemStack)) return null;
         Object nmsItemStack = getHandle(itemStack);
         if (nmsItemStack != null) return nmsItemStack;
         return null;
     }
 
 
-
-    public Object readItemStack(ItemStack itemStack, Object nbtTagCompound){
+    public Object readItemStack(ItemStack itemStack, Object nbtTagCompound)
+    {
         Object nmsItemStack;
-        if (classCraftItemStack.isInstance(itemStack)) {
+        if (classCraftItemStack.isInstance(itemStack))
+        {
             nmsItemStack = getHandle(itemStack);
-        } else {
+        } else
+        {
             nmsItemStack = createNmsItemStack(itemStack);
         }
         return save.of(nmsItemStack).call(nbtTagCompound);
     }
 
-    private void writeNMSItemStack(Object nmsItemStack, Object nbtTagCompound){
+    private void writeNMSItemStack(Object nmsItemStack, Object nbtTagCompound)
+    {
         write.of(nmsItemStack).call(nbtTagCompound);
     }
 
-    public void writeItemStack(ItemStack itemStack, Object nbtTagCompound){
+    public void writeItemStack(ItemStack itemStack, Object nbtTagCompound)
+    {
         Object nmsItemStack;
-        if (classCraftItemStack.isInstance(itemStack)) {
+        if (classCraftItemStack.isInstance(itemStack))
+        {
             nmsItemStack = getHandle(itemStack);
             writeNMSItemStack(nmsItemStack, nbtTagCompound);
-        } else {
+        } else
+        {
             nmsItemStack = createNmsItemStack(itemStack);
             write.of(nmsItemStack).call(nbtTagCompound);
             ItemStack craftItemStack = createCraftItemStack(nmsItemStack);
@@ -184,38 +222,49 @@ public final class ItemStackUtils {
         }
     }
 
-    private void setTagCB(ItemStack itemStack, Object nbtTagCompound){
+    private void setTagCB(ItemStack itemStack, Object nbtTagCompound)
+    {
         Object nmsItemStack = getHandle(itemStack);
         setTag(nmsItemStack, nbtTagCompound);
     }
 
-    private Object getTagCB(ItemStack itemStack){
+    private Object getTagCB(ItemStack itemStack)
+    {
         Object nmsItemStack = getHandle(itemStack);
         return getTag(nmsItemStack);
     }
 
-    private void setTagOrigin(ItemStack itemStack, Object nbtTagCompound){
-        if (nbtTagCompound == null) {
+    private void setTagOrigin(ItemStack itemStack, Object nbtTagCompound)
+    {
+        if (nbtTagCompound == null)
+        {
             itemStack.setItemMeta(null);
             return;
         }
         ItemStack copyNMSItemStack = createCraftItemStack(itemStack);
-        try {
+        try
+        {
             setTagCB(copyNMSItemStack, nbtTagCompound);
             ItemMeta meta = copyNMSItemStack.getItemMeta();
             itemStack.setItemMeta(meta);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
 
-    private Object getTagOrigin(ItemStack itemStack){
+    private Object getTagOrigin(ItemStack itemStack)
+    {
         ItemStack copyNMSItemStack = createCraftItemStack(itemStack);
-        try {
+        try
+        {
             ItemMeta meta = itemStack.getItemMeta();
             copyNMSItemStack.setItemMeta(meta);
             return getTagCB(copyNMSItemStack);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Bukkit.getLogger().log(Level.WARNING, "copy item meta", e);
         }
         return null;

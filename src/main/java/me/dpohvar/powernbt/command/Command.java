@@ -10,28 +10,36 @@ import java.util.logging.Level;
 
 import static me.dpohvar.powernbt.PowerNBT.plugin;
 
-public abstract class Command implements CommandExecutor {
+public abstract class Command implements CommandExecutor
+{
 
     private final boolean silent;
 
-    public Command(boolean silent){
+    public Command(boolean silent)
+    {
         this.silent = silent;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args)
+    {
         Caller caller = plugin.getCaller(sender);
         caller.setSilent(silent);
-        try {
+        try
+        {
             LinkedList<String> words = new LinkedList<String>();
-            for (String s : plugin.getTokenizer().tokenize(StringUtils.join(args, ' ')).values()) {
+            for (String s : plugin.getTokenizer().tokenize(StringUtils.join(args, ' ')).values())
+            {
                 words.add(s);
             }
             return command(caller, words);
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             caller.handleException(t);
-            if (plugin.isDebug()) {
-                plugin.getLogger().log(Level.WARNING, "Exception on command: "+label, t);
+            if (plugin.isDebug())
+            {
+                plugin.getLogger().log(Level.WARNING, "Exception on command: " + label, t);
             }
             return true;
         }

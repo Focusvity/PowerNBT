@@ -8,13 +8,18 @@ import me.dpohvar.powernbt.nbt.NBTBase;
  * Date: 14.09.13
  * Time: 14:16
  */
-public class NBTTagNotFound extends NBTQueryException{
+public class NBTTagNotFound extends NBTQueryException
+{
     private final NBTBase tag;
-    public NBTTagNotFound(NBTBase tag,Object tagName){
-        super("tag "+tagName+" not found");
+
+    public NBTTagNotFound(NBTBase tag, Object tagName)
+    {
+        super("tag " + tagName + " not found");
         this.tag = tag;
     }
-    public NBTBase getTag(){
+
+    public NBTBase getTag()
+    {
         return tag;
     }
 }

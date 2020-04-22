@@ -5,27 +5,35 @@ import me.dpohvar.powernbt.utils.Caller;
 
 import static me.dpohvar.powernbt.PowerNBT.plugin;
 
-public class ActionDebug extends Action {
+public class ActionDebug extends Action
+{
 
     private final Caller caller;
     private final String value;
 
-    public ActionDebug(Caller caller, String value) {
+    public ActionDebug(Caller caller, String value)
+    {
         this.caller = caller;
         this.value = value;
     }
 
     @Override
-    public void execute() {
+    public void execute()
+    {
         boolean debug;
-        if (value == null || value.equals("toggle")) {
+        if (value == null || value.equals("toggle"))
+        {
             debug = !PowerNBT.plugin.isDebug();
-        } else {
-            if (value.equals("on") || value.equals("enable") || value.equals("true")) {
+        } else
+        {
+            if (value.equals("on") || value.equals("enable") || value.equals("true"))
+            {
                 debug = true;
-            } else if (value.equals("off") || value.equals("disable") || value.equals("false")) {
+            } else if (value.equals("off") || value.equals("disable") || value.equals("false"))
+            {
                 debug = false;
-            } else {
+            } else
+            {
                 throw new RuntimeException(plugin.translate("error_parsevalue", value));
             }
         }
