@@ -35,7 +35,7 @@ public class CompleterNBT extends Completer
         String word = former.poll(); // object
         if (word.isEmpty())
         {
-            former.addIfStarts("buffer", "list", "compound", "byte[]", "int[]", "debug", "file:", "gz:", "sch:");
+            former.addIfStarts("buffer", "list", "compound", "byte[]", "int[]", "long[]", "debug", "file:", "gz:", "sch:");
             if (caller.getOwner() instanceof Entity) former.addIfStarts("block", "inventory", "hand", "hand:");
             if (caller.getOwner() instanceof Entity && former.getQuery().startsWith("id"))
             {
@@ -145,7 +145,7 @@ public class CompleterNBT extends Completer
                     former.addIfStarts("float", "double");
                 } else if (val1.matches("\\[((-?[0-9]+|#-?[0-9a-fA-F]+)(,(?!\\])|(?=\\])))*\\]"))
                 {
-                    former.addIfStarts("byte[]", "int[]");
+                    former.addIfStarts("byte[]", "int[]", "long[]");
                 }
             } else
             {
@@ -240,6 +240,7 @@ public class CompleterNBT extends Completer
                             case DOUBLE:
                             case BYTEARRAY:
                             case INTARRAY:
+                            case LONGARRAY:
                                 String s = NBTViewer.getShortValue(base, false);
                                 former.add(s);
                                 return;
@@ -271,6 +272,7 @@ public class CompleterNBT extends Completer
                                     case DOUBLE:
                                     case BYTEARRAY:
                                     case INTARRAY:
+                                    case LONGARRAY:
                                         String s = NBTViewer.getShortValue(b, false);
                                         former.add(s);
                                         return;
@@ -288,7 +290,7 @@ public class CompleterNBT extends Completer
                         }
                     }
                 }
-                former.addIfStarts("me", "item", "buffer", "list", "compound", "byte[]", "int[]");
+                former.addIfStarts("me", "item", "buffer", "list", "compound", "byte[]", "int[]", "long[]");
                 if (caller.getOwner() instanceof Entity) former.addIfStarts("block", "inventory", "hand", "hand:");
                 if (caller.getOwner() instanceof Entity && former.getQuery().startsWith("id"))
                 {
@@ -394,7 +396,7 @@ public class CompleterNBT extends Completer
                         former.addIfStarts("float", "double");
                     } else if (val2.matches("\\[((-?[0-9]+|#-?[0-9a-fA-F]+)(,(?!\\])|(?=\\])))*\\]"))
                     {
-                        former.addIfStarts("byte[]", "int[]");
+                        former.addIfStarts("byte[]", "int[]", "long[]");
                     }
                 } else
                 {
@@ -444,6 +446,12 @@ public class CompleterNBT extends Completer
                 } else if (base instanceof NBTTagIntArray)
                 {
                     for (int i = 0; i < ((NBTTagIntArray) base).size(); i++)
+                    {
+                        former.addIfStarts("[" + i + "]");
+                    }
+                } else if (base instanceof NBTTagLongArray)
+                {
+                    for (int i = 0; i < ((NBTTagLongArray) base).size(); i++)
                     {
                         former.addIfStarts("[" + i + "]");
                     }
@@ -503,6 +511,13 @@ public class CompleterNBT extends Completer
                     String s = "[" + i + "]";
                     if (s.toUpperCase().startsWith(qu.toUpperCase())) former.add(option + s);
                 }
+            } else if (base instanceof NBTTagLongArray)
+            {
+                for (int i = 0; i < ((NBTTagLongArray) base).size(); i++)
+                {
+                    String s = "[" + i + "]";
+                    if (s.toUpperCase().startsWith(qu.toUpperCase())) former.add(option + s);
+                }
             }
         }
         for (String type : container.getTypes())
@@ -519,7 +534,6 @@ public class CompleterNBT extends Completer
             }
         }
     }
-
 }
 
 

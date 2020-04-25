@@ -656,5 +656,4 @@ public class NBTManager
         if (compound == null) return new ItemStack(Material.AIR);
         return itemStackUtils.createCraftItemStackFromNBT(compound.getHandle());
     }
-
 }

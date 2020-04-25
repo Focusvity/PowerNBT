@@ -19,6 +19,7 @@ public enum NBTType
     LIST((byte) 9, "list", "\u2630", DARK_GRAY), // ☰
     COMPOUND((byte) 10, "compound", "\u27B2", GRAY), // ➲
     INTARRAY((byte) 11, "int[] ", ChatColor.BOLD + "\u24D8", DARK_BLUE), // ⓘ
+    LONGARRAY((byte) 12, "long[]", ChatColor.BOLD + "\u24DB", DARK_GREEN), // ⓛ
     ;
     public final String name;
     public final String prefix;
@@ -233,7 +234,7 @@ public enum NBTType
                     }
                     if (t == null) try
                     {
-                        t = (byte) (long) Long.parseLong(x);
+                        t = (byte) Long.parseLong(x);
                     }
                     catch (Throwable ignored)
                     {
@@ -273,7 +274,7 @@ public enum NBTType
                     }
                     if (t == null) try
                     {
-                        t = (int) (long) Long.parseLong(x);
+                        t = (int) Long.parseLong(x);
                     }
                     catch (Throwable ignored)
                     {
@@ -282,6 +283,46 @@ public enum NBTType
                     v[i] = t;
                 }
                 return new NBTTagIntArray(v);
+            }
+            case LONGARRAY:
+            {
+                if (!s.matches("\\[((-?[0-9]+|#-?[0-9a-fA-F]+)(,(?!\\])|(?=\\])))*\\]"))
+                {
+                    throw new RuntimeException(plugin.translate("error_parse", s, LONGARRAY.name));
+                }
+                String sp = s.substring(1, s.length() - 1);
+                if (sp.isEmpty()) return new NBTTagLongArray();
+                String[] ss = sp.split(",");
+                long[] v = new long[ss.length];
+                for (int i = 0; i < v.length; i++)
+                {
+                    Long t = null;
+                    String x = ss[i];
+                    if (x.startsWith("#")) try
+                    {
+                        t = Long.parseLong(x.substring(1), 16);
+                    }
+                    catch (Throwable ignored)
+                    {
+                    }
+                    try
+                    {
+                        t = Long.parseLong(x);
+                    }
+                    catch (Throwable ignored)
+                    {
+                    }
+                    if (t == null) try
+                    {
+                        t = Long.parseLong(x);
+                    }
+                    catch (Throwable ignored)
+                    {
+                    }
+                    if (t == null) throw new RuntimeException(plugin.translate("error_parse", x, LONG.name));
+                    v[i] = t;
+                }
+                return new NBTTagLongArray(v);
             }
             default:
             {

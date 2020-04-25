@@ -54,6 +54,8 @@ public abstract class NBTBase
                 return new NBTTagCompound(true, handle);
             case 11:
                 return new NBTTagIntArray(true, handle);
+            case 12:
+                return new NBTTagLongArray(true, handle);
             default:
                 return null;
         }
@@ -85,6 +87,8 @@ public abstract class NBTBase
                 return new NBTTagCompound();
             case 11:
                 return new NBTTagIntArray();
+            case 12:
+                return new NBTTagLongArray();
             default:
                 return null;
         }
@@ -109,6 +113,7 @@ public abstract class NBTBase
         if (o instanceof byte[]) return new NBTTagByteArray((byte[]) o);
         if (o instanceof CharSequence) return new NBTTagString(o.toString());
         if (o instanceof int[]) return new NBTTagIntArray((int[]) o);
+        if (o instanceof long[]) return new NBTTagLongArray((long[]) o);
         if (o instanceof Map)
         {
             NBTTagCompound tag = new NBTTagCompound();

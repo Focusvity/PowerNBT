@@ -120,5 +120,4 @@ public class TypeCompleter
             return r;
         }
     }
-
 }
