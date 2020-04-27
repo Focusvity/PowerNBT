@@ -364,6 +364,7 @@ public class Argument
             NBTType type = NBTType.fromString(param);
             if (type.equals(NBTType.BYTEARRAY)) type = NBTType.BYTE;
             else if (type.equals(NBTType.INTARRAY)) type = NBTType.INT;
+            else if (type.equals(NBTType.LONGARRAY)) type = NBTType.LONG;
             return new NBTContainerBase(type.parse(object));
         }
         if (object.matches("NaN|-?Infinity"))
@@ -372,6 +373,7 @@ public class Argument
             NBTType type = NBTType.fromString(param);
             if (type.equals(NBTType.BYTEARRAY)) type = NBTType.BYTE;
             else if (type.equals(NBTType.INTARRAY)) type = NBTType.INT;
+            else if (type.equals(NBTType.LONGARRAY)) type = NBTType.LONG;
             return new NBTContainerBase(type.parse(object));
         }
         if (object.matches("-?[0-9]+\\.[0-9]*"))
@@ -380,6 +382,7 @@ public class Argument
             NBTType type = NBTType.fromString(param);
             if (type.equals(NBTType.BYTEARRAY)) type = NBTType.BYTE;
             else if (type.equals(NBTType.INTARRAY)) type = NBTType.INT;
+            else if (type.equals(NBTType.LONGARRAY)) type = NBTType.LONG;
             return new NBTContainerBase(type.parse(object));
         }
         if (object.equals("*") || object.equals("self") || object.equals("this"))
@@ -396,6 +399,7 @@ public class Argument
                 NBTType type = NBTType.fromString(param);
                 if (type == NBTType.BYTE) type = NBTType.BYTEARRAY;
                 else if (type == NBTType.INT) type = NBTType.INTARRAY;
+                else if (type.equals(NBTType.LONGARRAY)) type = NBTType.LONG;
                 return new NBTContainerBase(type.parse(object));
             }
         }
@@ -563,6 +567,7 @@ public class Argument
             }
             if (type == NBTType.BYTEARRAY) type = NBTType.BYTE;
             else if (type == NBTType.INTARRAY) type = NBTType.INT;
+            else if (type.equals(NBTType.LONGARRAY)) type = NBTType.LONG;
             if (type == NBTType.END && paramQuery != null)
             {
                 NBTQuery parent = paramQuery.getParent();
@@ -586,6 +591,7 @@ public class Argument
             NBTType type = NBTType.fromBase(paramQuery.get(paramContainer.getCustomTag()));
             if (type == NBTType.INT) type = NBTType.INTARRAY;
             else if (type == NBTType.BYTE) type = NBTType.BYTEARRAY;
+            else if (type.equals(NBTType.LONG)) type = NBTType.LONGARRAY;
             else if (type == null || type == NBTType.END)
             {
                 TypeCompleter comp = plugin.getTypeCompleter();
