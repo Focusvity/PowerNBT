@@ -13,8 +13,7 @@
 
         <java-version>1.6</java-version>
 
-        <bukkit-version>1.15.2-R0.1-SNAPSHOT</bukkit-version>
-        <spigot-version>1.15.2-R0.1-SNAPSHOT</spigot-version>
+        <spigot-version>1.16.1-R0.1-SNAPSHOT</spigot-version>
 
         <github.global.server>github</github.global.server>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,7 +29,7 @@
 
     <groupId>me.dpohvar.powernbt</groupId>
     <artifactId>PowerNBT</artifactId>
-    <version>0.9.1.1</version>
+    <version>0.9.1.2</version>
     <packaging>jar</packaging>
 
     <description>Powerful NBT editor for CraftBukkit 1.5 and later</description>
@@ -62,12 +61,6 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>${spigot-version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>${bukkit-version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -135,14 +128,6 @@
 
                     <reportOutputDirectory>${project.reporting.outputDirectory}</reportOutputDirectory>
                     <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
-                    <additionalDependencies>
-                        <additionalDependency>
-                            <groupId>org.bukkit</groupId>
-                            <artifactId>bukkit</artifactId>
-                            <version>${bukkit-version}</version>
-                            <scope>provided</scope>
-                        </additionalDependency>
-                    </additionalDependencies>
                     <charset>UTF-8</charset>
                     <detectLinks>true</detectLinks>
                     <docencoding>UTF-8</docencoding>
