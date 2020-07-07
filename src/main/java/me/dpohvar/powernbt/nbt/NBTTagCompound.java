@@ -170,6 +170,13 @@ public class NBTTagCompound extends NBTBase implements Map<String, NBTBase>
         return null;
     }
 
+    public long[] getLongArray(String key)
+    {
+        NBTBase t = get(key);
+        if (t instanceof NBTTagLongArray) return ((NBTTagLongArray) t).get();
+        return null;
+    }
+
     public NBTTagList getList(String key)
     {
         NBTBase t = get(key);

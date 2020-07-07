@@ -32,15 +32,12 @@ public final class NBTBlockUtils
     private RefMethod read = classTileEntity.findMethod(
             new MethodCondition()
                     .withTypes("{nms}.NBTTagCompound, {nm}.nbt.NBTTagCompound, {NBTTagCompound}")
-                    .withSuffix("b"),
-            new MethodCondition()
-                    .withTypes("{nms}.NBTTagCompound, {nm}.nbt.NBTTagCompound, {NBTTagCompound}")
                     .withSuffix("save")
     );
     private RefMethod write = classTileEntity.findMethod(
             new MethodCondition() // 1.12
                     .withTypes("{nms}.NBTTagCompound, {nm}.nbt.NBTTagCompound, {NBTTagCompound}")
-                    .withSuffix("load"),
+                    .withSuffix("b"),
             new MethodCondition() // 1.11, cauldron
                     .withTypes("{NBTTagCompound}, {nms}.NBTTagCompound, {nm}.nbt.NBTTagCompound")
                     .withSuffix("a")

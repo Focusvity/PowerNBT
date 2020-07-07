@@ -89,15 +89,16 @@ public class EntityUtils
                 Bukkit.getLogger().log(Level.WARNING, "Unknown version of forge", e);
                 throw new RuntimeException(e);
             }
-        } else
+        }
+        else
         {
             try
             { // bukkit 1.6+
                 mWriteNBTToEntity = mWriteNBTToPlayer = cEntity.findMethod(
-                        new MethodCondition().withTypes(cNBTTagCompound).withName("f")
+                        new MethodCondition().withTypes(cNBTTagCompound).withName("save")
                 );
                 mReadEntityToNBT = cEntity.findMethod(
-                        new MethodCondition().withTypes(cNBTTagCompound).withName("save"), // spigot 1.12
+                        new MethodCondition().withTypes(cNBTTagCompound).withName("load"), // spigot 1.12
                         new MethodCondition().withTypes(cNBTTagCompound).withName("c")
                 );
                 mReadPlayerToNBT = cEntity.findMethod(
@@ -131,7 +132,8 @@ public class EntityUtils
         if (cEntityPlayer.isInstance(nmsEntity))
         {
             mReadPlayerToNBT.of(nmsEntity).call(nbtTagCompound);
-        } else
+        }
+        else
         {
             mReadEntityToNBT.of(nmsEntity).call(nbtTagCompound);
         }
@@ -143,7 +145,8 @@ public class EntityUtils
         if (entity.getType() == EntityType.PLAYER)
         {
             mWriteNBTToPlayer.of(liv).call(nbtTagCompound);
-        } else
+        }
+        else
         {
             mWriteNBTToEntity.of(liv).call(nbtTagCompound);
         }
