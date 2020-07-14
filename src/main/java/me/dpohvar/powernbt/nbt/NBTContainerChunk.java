@@ -34,7 +34,7 @@ public class NBTContainerChunk extends NBTContainer<Chunk>
     public NBTTagCompound readTag()
     {
         NBTTagCompound tag = new NBTTagCompound();
-        chunkUtils.readChunk(chunk, tag.getHandle());
+        chunkUtils.readChunk(chunk);
         return tag;
     }
 

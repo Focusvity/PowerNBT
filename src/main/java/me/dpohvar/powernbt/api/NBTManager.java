@@ -34,6 +34,7 @@ public class NBTManager
     NBTCompressedUtils nbtCompressedUtils = NBTCompressedUtils.nbtCompressedUtils;
     NBTUtils nbtUtils = NBTUtils.nbtUtils;
     ReflectionUtils.RefMethod getUUID;
+
     private NBTManager()
     {
         try
@@ -66,12 +67,14 @@ public class NBTManager
                 list.push(value);
                 if (checkCrossReferences(list, (Collection) value)) return true;
                 list.pop();
-            } else if (value instanceof Map)
+            }
+            else if (value instanceof Map)
             {
                 list.push(value);
                 if (checkCrossReferences(list, ((Map) value).values())) return true;
                 list.pop();
-            } else if (value instanceof Object[])
+            }
+            else if (value instanceof Object[])
             {
                 list.push(value);
                 if (checkCrossReferences(list, Arrays.asList((Object[]) value))) return true;
@@ -174,9 +177,7 @@ public class NBTManager
      */
     public NBTCompound read(Chunk chunk)
     {
-        NBTCompound compound = new NBTCompound();
-        ChunkUtils.chunkUtils.readChunk(chunk, compound.getHandle());
-        return compound;
+        return ChunkUtils.chunkUtils.readChunk(chunk);
     }
 
     /**
@@ -436,10 +437,12 @@ public class NBTManager
             if (slot >= 0 && slot < contents.length)
             {
                 contents[slot] = itemstack;
-            } else if (armor != null && slot >= 100 && slot < armor.length + 100)
+            }
+            else if (armor != null && slot >= 100 && slot < armor.length + 100)
             {
                 armor[slot - 100] = itemstack;
-            } else if (extra != null && slot >= 150 && slot < extra.length + 150)
+            }
+            else if (extra != null && slot >= 150 && slot < extra.length + 150)
             {
                 extra[slot - 150] = itemstack;
             }
@@ -591,7 +594,8 @@ public class NBTManager
             UUID uuid = player.getUniqueId();
             File playerDir = new File(baseDir, "playerdata");
             return new File(playerDir, uuid + ".dat");
-        } else
+        }
+        else
         {
             File playerDir = new File(baseDir, "players");
             return new File(playerDir, player.getName() + ".dat");

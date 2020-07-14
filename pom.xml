@@ -11,7 +11,7 @@
         <plugin-website>https://www.spigotmc.org/resources/powernbt.9098/</plugin-website>
         <plugin-description>Powerful nbt editor for bukkit</plugin-description>
 
-        <java-version>1.6</java-version>
+        <java-version>1.8</java-version>
 
         <spigot-version>1.16.1-R0.1-SNAPSHOT</spigot-version>
 

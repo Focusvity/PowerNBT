@@ -1,6 +1,7 @@
 package me.dpohvar.powernbt.utils;
 
 import me.dpohvar.powernbt.PowerNBT;
+import me.dpohvar.powernbt.api.NBTCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
@@ -8,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.logging.Level;
 
 import static me.dpohvar.powernbt.utils.NBTUtils.nbtUtils;
@@ -18,44 +18,44 @@ public class ChunkUtils
 {
 
     public static ChunkUtils chunkUtils = new ChunkUtils();
-    Map<Object, Object> chunkLoaderMap = new WeakHashMap<Object, Object>();
+    //Map<Object, Object> chunkLoaderMap = new WeakHashMap<Object, Object>();
+    private RefClass cChunkCoordIntPair;
+    private RefClass cIChunkAccess;
     private RefField fChunkProvider;
-    private RefField fChunkLoader;
     private RefField fChunks;
     private RefMethod mGetChunkHandle;
     private RefMethod mGetWorldHandle;
     private RefMethod mSaveChunk;
     private RefMethod mLoadChunk;
     private RefMethod mLoadEntities;
-    private RefMethod mPutToMap;
+    //private RefMethod mPutToMap;
     private RefMethod mAddEntities;
-    //private RefConstructor nChunkPacket;
-    private RefMethod mLoadNearby;
+    private RefMethod mDefinedStructureManager;
+    private RefMethod mVillagePlace;
 
 
     private ChunkUtils()
     {
         try
         {
-            //RefClass cChunkPacket = getRefClass("{nms}.PacketPlayOutMapChunk, {nms}.PacketPlayOutMapChunk, {nm}.network.play.server.S21PacketChunkData, {PacketPlayOutMapChunk}");
             RefClass cCraftChunk = getRefClass("{cb}.CraftChunk, {CraftChunk}");
             RefClass cChunk = getRefClass("{nms}.Chunk, {nm}.world.chunk.Chunk, {Chunk}");
-            //nChunkPacket = cChunkPacket.getConstructor(cChunk,boolean.class,int.class);
             mGetChunkHandle = cCraftChunk.findMethodByReturnType(cChunk);
             RefClass cCraftWorld = getRefClass("{cb}.CraftWorld, {CraftWorld}");
             RefClass cWorldServer = getRefClass("{nms}.WorldServer, {nm}.world.WorldServer, {WorldServer}");
             mGetWorldHandle = cCraftWorld.findMethodByReturnType(cWorldServer);
-            RefClass iChunkProvider = getRefClass("{nms}.IChunkProvider, {nm}.world.chunk.IChunkProvider, {IChunkProvider}");
+            //RefClass iChunkProvider = getRefClass("{nms}.IChunkProvider, {nm}.world.chunk.IChunkProvider, {IChunkProvider}");
             RefClass cChunkProviderServer = getRefClass("{nms}.ChunkProviderServer, {nm}.world.gen.ChunkProviderServer, {ChunkProviderServer}");
-            RefClass iChunkLoader = getRefClass("{nms}.IChunkLoader, {nm}.world.chunk.storage.IChunkLoader, {IChunkLoader}");
+            //RefClass iChunkLoader = getRefClass("{nms}.IChunkLoader, {nm}.world.chunk.storage.IChunkLoader, {IChunkLoader}");
             fChunkProvider = cWorldServer.findField(cChunkProviderServer);
-            fChunkLoader = cChunkProviderServer.findField(iChunkLoader);
             RefClass cChunkRegionLoader = getRefClass("{nms}.ChunkRegionLoader, {nm}.world.chunk.storage.AnvilChunkLoader, {ChunkRegionLoader}");
-            RefClass cWorld = getRefClass("{nms}.World, {nm}.world.World, {World}");
-            RefClass cNBTTagCompound = getRefClass("{nms}.NBTTagCompound, {nm}.nbt.NBTTagCompound, {NBTTagCompound}");
-            mSaveChunk = cChunkRegionLoader.findMethodByParams(cChunk, cWorld, cNBTTagCompound);
-            RefClass cLongObjectHashMap;
-            try
+            //RefClass cWorld = getRefClass("{nms}.World, {nm}.world.World, {World}");
+            //RefClass cNBTTagCompound = getRefClass("{nms}.NBTTagCompound, {nm}.nbt.NBTTagCompound, {NBTTagCompound}");
+            cChunkCoordIntPair = getRefClass("{nms}.ChunkCoordIntPair, {nm}.world.chunk.ChunkCoordIntPair, {ChunkCoordIntPair}");
+            cIChunkAccess = getRefClass("{nms}.IChunkAccess, {nm}.world.chunk.IChunkAccess, {ChunkCoordIntPair}");
+            mSaveChunk = cChunkRegionLoader.findMethodByName("saveChunk");
+            //RefClass cLongObjectHashMap;
+            /*try
             {
                 cLongObjectHashMap = getRefClass("{cb}.util.LongObjectHashMap, {LongObjectHashMap}");
                 fChunks = cChunkProviderServer.findField(cLongObjectHashMap);
@@ -64,15 +64,11 @@ public class ChunkUtils
             {
                 cLongObjectHashMap = getRefClass("{nm}.util.LongHashMap, {LongHashMap}");
                 fChunks = cChunkProviderServer.findField(cLongObjectHashMap);
-            }
-            mLoadChunk = cChunkRegionLoader.findMethodByParams(cWorld, cNBTTagCompound);
-            mLoadEntities = cChunkRegionLoader.findMethod(
-                    new MethodCondition()
-                            .withReturnType(void.class)
-                            .withTypes(cChunk, cNBTTagCompound, cWorld),
-                    null
-            );
-            mPutToMap = cLongObjectHashMap.findMethodByParams(long.class, Object.class);
+            }*/
+            //mLoadChunk = cChunkRegionLoader.findMethodByParams(cWorld, cNBTTagCompound);
+            mLoadChunk = cChunkRegionLoader.findMethodByName("loadChunk");
+            mLoadEntities = cChunkRegionLoader.findMethodByName("loadEntities");
+            //mPutToMap = cLongObjectHashMap.findMethodByParams(long.class, Object.class);
             mAddEntities = cChunk.findMethod(
                     new MethodCondition()
                             .withReturnType(void.class)
@@ -84,14 +80,16 @@ public class ChunkUtils
                             .withTypes()
                             .withSuffix("c")
             );
-            mLoadNearby = cChunk.findMethodByParams(iChunkProvider, iChunkProvider, int.class, int.class);
+            mDefinedStructureManager = cWorldServer.findMethodByName("r_");
+            mVillagePlace = cWorldServer.findMethodByName("x");
         }
         catch (Exception e)
         {
             if (PowerNBT.plugin.isDebug())
             {
                 PowerNBT.plugin.getLogger().log(Level.WARNING, "Can't load ChunkUtils!", e);
-            } else
+            }
+            else
             {
                 PowerNBT.plugin.getLogger().log(Level.WARNING, "Can't load ChunkUtils!");
             }
@@ -103,7 +101,7 @@ public class ChunkUtils
         return ((long) msw << 32) + (long) lsw - -2147483648L;
     }
 
-    private Object getChunkLoader(Object nmsWorld)
+    /*private Object getChunkLoader(Object nmsWorld)
     {
         Object chunkLoader = chunkLoaderMap.get(nmsWorld);
         if (chunkLoader != null) return chunkLoader;
@@ -111,14 +109,14 @@ public class ChunkUtils
         chunkLoader = fChunkLoader.of(chunkProvider).get();
         chunkLoaderMap.put(nmsWorld, chunkLoader);
         return chunkLoader;
-    }
+    }*/
 
-    public void readChunk(Chunk chunk, Object nbtTagCompound)
+    public NBTCompound readChunk(Chunk chunk)
     {
         Object nmsWorld = mGetWorldHandle.of(chunk.getWorld()).call();
-        Object chunkLoader = getChunkLoader(nmsWorld);
         Object nmsChunk = mGetChunkHandle.of(chunk).call();
-        mSaveChunk.of(chunkLoader).call(nmsChunk, nmsWorld, nbtTagCompound);
+        Object nbt = mSaveChunk.of(fChunkProvider).call(nmsWorld, nmsChunk); // saveChunk(WorldServer, IChunkAccess)
+        return NBTCompound.forNBTCopy(nbt);
     }
 
     public void writeChunk(Chunk chunk, Object nbtTagCompound)
@@ -134,10 +132,9 @@ public class ChunkUtils
     private void writeChunk(Chunk chunk, Object nbtTagCompound, boolean unsafe)
     {
         Object nmsWorld = mGetWorldHandle.of(chunk.getWorld()).call();
-        Object chunkProvider = fChunkProvider.of(nmsWorld).get();
-        Object chunkLoader = fChunkLoader.of(chunkProvider).get();
         int x = chunk.getX();
         int z = chunk.getZ();
+        Object chunkCoordIntPair = cChunkCoordIntPair.getConstructor().create(x, z);
         // remove entities
         for (Entity entity : chunk.getEntities())
         {
@@ -159,23 +156,23 @@ public class ChunkUtils
             fixTileEntitiesData(handleMap.get("TileEntities"), x, z);
         }
         // create new chunk
-        Object newChunk = mLoadChunk.of(chunkLoader).call(nmsWorld, nbtTagCompound);
+        Object newChunk = mLoadChunk.of(fChunkProvider).call(nmsWorld,
+                mDefinedStructureManager.of(nmsWorld),
+                mVillagePlace.of(nmsWorld),
+                chunkCoordIntPair,
+                nbtTagCompound); // loadChunk(WorldServer, DefinedStructureManager, VillagePlace, ChunkCoordIntPair, NBTTagCompound)
         // load entities
-        if (mLoadEntities != null) mLoadEntities.of(chunkLoader).call(newChunk, nbtTagCompound, nmsWorld);
+        if (mLoadEntities != null) mLoadEntities.of(fChunkProvider).call(nbtTagCompound, newChunk);
         // add entities
         mAddEntities.of(newChunk).call();
-        // load nearby chunks
-        mLoadNearby.of(newChunk).call(chunkProvider, chunkProvider, x, z);
         // save chunk to provider map
-        Object chunkMap = fChunks.of(chunkProvider).get();
+        //Object chunkMap = fChunks.of(chunkProvider).get();
         long hash = toLong(x, z);
-        mPutToMap.of(chunkMap).call(hash, newChunk);
+        //mPutToMap.of(chunkMap).call(hash, newChunk);
         // update chunk
         ChunkReloadTask task = new ChunkReloadTask(chunk);
         task.run();
         Bukkit.getScheduler().runTaskLater(PowerNBT.plugin, task, 2);
-        // refresh blocks
-        chunk.getWorld().refreshChunk(x, z);
     }
 
     private void fixEntitiesData(Object nbtList, int x, int z)

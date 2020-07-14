@@ -81,7 +81,7 @@ public abstract class NBTUtils
         if (javaObject instanceof Chunk)
         {
             Object compound = createTagCompound();
-            chunkUtils.readChunk((Chunk) javaObject, compound);
+            chunkUtils.readChunk((Chunk) javaObject);
             return compound;
         }
         if (javaObject instanceof Entity)
