@@ -112,12 +112,14 @@ public class NBTViewer
                         ArrayList<String> h = new ArrayList<String>(v.size());
                         for (byte b : v.get()) h.add(Integer.toHexString(b & 0xFF));
                         value += "#" + StringUtils.join(h, ',');
-                    } else if (bin)
+                    }
+                    else if (bin)
                     {
                         ArrayList<String> h = new ArrayList<String>(v.size());
                         for (byte b : v.get()) h.add(Integer.toBinaryString(b & 0xFF));
                         value += "b" + StringUtils.join(h, ',');
-                    } else
+                    }
+                    else
                     {
                         value += StringUtils.join(v.iterator(), ',');
                     }
@@ -150,7 +152,8 @@ public class NBTViewer
                 if (list.size() == 0)
                 {
                     value = PowerNBT.plugin.translate("data_emptylist");
-                } else
+                }
+                else
                 {
                     value = PowerNBT.plugin.translate("data_elements", list.size())
                             + " " + listType.color + listType.name + ChatColor.RESET;
@@ -163,7 +166,8 @@ public class NBTViewer
                 if (tag.size() == 0)
                 {
                     value = PowerNBT.plugin.translate("data_emptycompound");
-                } else
+                }
+                else
                 {
                     ArrayList<String> h = new ArrayList<String>();
                     for (Map.Entry<String, NBTBase> b : tag.entrySet())
@@ -186,12 +190,41 @@ public class NBTViewer
                         ArrayList<String> h = new ArrayList<String>(v.size());
                         for (int b : v.get()) h.add(Long.toHexString(b & 0xFFFFFFFFL));
                         value += "#" + StringUtils.join(h, ',');
-                    } else if (bin)
+                    }
+                    else if (bin)
                     {
                         ArrayList<String> h = new ArrayList<String>(v.size());
                         for (int b : v.get()) h.add(Long.toBinaryString(b & 0xFFFFFFFFL));
                         value += "b" + StringUtils.join(h, ',');
-                    } else
+                    }
+                    else
+                    {
+                        value += StringUtils.join(v.iterator(), ',');
+                    }
+                    value += "]";
+                }
+                break;
+            }
+            case 12:
+            { // longarray
+                NBTTagLongArray v = ((NBTTagLongArray) base);
+                if (v.size() == 0) value = PowerNBT.plugin.translate("data_emptyarray");
+                else
+                {
+                    value = v.size() + ": [";
+                    if (hex)
+                    {
+                        ArrayList<String> h = new ArrayList<String>(v.size());
+                        for (long b : v.get()) h.add(Integer.toHexString(((int) b) & 0xFF));
+                        value += "#" + StringUtils.join(h, ',');
+                    }
+                    else if (bin)
+                    {
+                        ArrayList<String> h = new ArrayList<String>(v.size());
+                        for (long b : v.get()) h.add(Integer.toBinaryString(((int) b) & 0xFF));
+                        value += "b" + StringUtils.join(h, ',');
+                    }
+                    else
                     {
                         value += StringUtils.join(v.iterator(), ',');
                     }
@@ -289,11 +322,13 @@ public class NBTViewer
                 {
                     value = PowerNBT.plugin.translate("data_emptyarray");
                     break;
-                } else if (start > v.size())
+                }
+                else if (start > v.size())
                 {
                     value = "\n" + PowerNBT.plugin.translate("data_outofrange");
                     break;
-                } else
+                }
+                else
                 {
                     StringBuilder buffer = new StringBuilder();
                     for (int i = start; i < end; i++)
@@ -321,7 +356,8 @@ public class NBTViewer
                 {
                     value = PowerNBT.plugin.translate("data_outofrange");
                     break;
-                } else
+                }
+                else
                 {
                     if (end > value.length())
                     {
@@ -423,11 +459,13 @@ public class NBTViewer
                 {
                     value = PowerNBT.plugin.translate("data_emptyarray");
                     break;
-                } else if (start > v.size())
+                }
+                else if (start > v.size())
                 {
                     value = "\n" + PowerNBT.plugin.translate("data_outofrange");
                     break;
-                } else
+                }
+                else
                 {
                     StringBuilder buffer = new StringBuilder();
                     for (int i = start; i < end; i++)
@@ -436,6 +474,35 @@ public class NBTViewer
                         buffer.append("\n").append(type.color).append("[").append(i).append("] ").append(ChatColor.RESET);
                         if (hex) buffer.append("#").append(Long.toHexString(v.get(i) & 0xFFFFFFFFL));
                         else if (bin) buffer.append("b").append(Long.toBinaryString(v.get(i) & 0xFFFFFFFFL));
+                        else buffer.append(v.get(i));
+                    }
+                    value = PowerNBT.plugin.translate("data_elements", v.size()) + buffer.toString();
+                }
+                break;
+            }
+            case 12:
+            { // longarray
+                if (start == 0 && end == 0) end = h_limit;
+                NBTTagLongArray v = ((NBTTagLongArray) base);
+                if (v.size() == 0)
+                {
+                    value = PowerNBT.plugin.translate("data_emptyarray");
+                    break;
+                }
+                else if (start > v.size())
+                {
+                    value = "\n" + PowerNBT.plugin.translate("data_outofrange");
+                    break;
+                }
+                else
+                {
+                    StringBuilder buffer = new StringBuilder();
+                    for (int i = start; i < end; i++)
+                    {
+                        if (i >= v.size()) break;
+                        buffer.append("\n").append(type.color).append("[").append(i).append("] ").append(ChatColor.RESET);
+                        if (hex) buffer.append("#").append(Long.toHexString(v.get(i) & 0xFF));
+                        else if (bin) buffer.append("b").append(Long.toBinaryString(v.get(i) & 0xFF));
                         else buffer.append(v.get(i));
                     }
                     value = PowerNBT.plugin.translate("data_elements", v.size()) + buffer.toString();

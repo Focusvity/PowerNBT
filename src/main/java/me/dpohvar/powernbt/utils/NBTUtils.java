@@ -39,7 +39,8 @@ public abstract class NBTUtils
             {
             }
             nbtUtils = raw ? new NBTUtils_MCPC_raw() : new NBTUtils_MCPC_named();
-        } else
+        }
+        else
         { // NMS classpath
             try
             { // to get raw constructor
@@ -76,12 +77,13 @@ public abstract class NBTUtils
         if (javaObject instanceof UUID) return createTagString(javaObject.toString());
         if (javaObject instanceof byte[]) return createTagByteArray((byte[]) javaObject);
         if (javaObject instanceof int[]) return createTagIntArray((int[]) javaObject);
+        if (javaObject instanceof long[]) return createTagLongArray((long[]) javaObject);
         if (javaObject instanceof Map) return new NBTCompound((Map) javaObject).getHandle();
         if (javaObject instanceof Object[]) return new NBTList((Arrays.asList((Object[]) javaObject))).getHandle();
         if (javaObject instanceof Chunk)
         {
             Object compound = createTagCompound();
-            chunkUtils.readChunk((Chunk) javaObject);
+            chunkUtils.readChunk((Chunk) javaObject, compound);
             return compound;
         }
         if (javaObject instanceof Entity)
@@ -165,6 +167,14 @@ public abstract class NBTUtils
                     for (int i : values) temp[t++] = (byte) i;
                     return temp;
                 }
+                if (value instanceof long[])
+                {
+                    long[] values = (long[]) value;
+                    byte[] temp = new byte[values.length];
+                    int t = 0;
+                    for (long i : values) temp[t++] = (byte) i;
+                    return temp;
+                }
                 if (value instanceof Collection)
                 {
                     Collection values = (Collection) value;
@@ -202,6 +212,12 @@ public abstract class NBTUtils
                     for (int t : (int[]) value) list.add(t);
                     return list;
                 }
+                if (value instanceof long[])
+                {
+                    ArrayList<Long> list = new ArrayList<>(((long[]) value).length);
+                    for (long t : (long[]) value) list.add(t);
+                    return list;
+                }
                 throw new NBTConvertException(value, type);
             }
             case 10:
@@ -220,6 +236,14 @@ public abstract class NBTUtils
                     for (byte i : values) temp[t++] = i;
                     return temp;
                 }
+                if (value instanceof long[])
+                {
+                    long[] values = (long[]) value;
+                    int[] temp = new int[values.length];
+                    int t = 0;
+                    for (long i : values) temp[t++] = (int) i;
+                    return temp;
+                }
                 if (value instanceof Collection)
                 {
                     Collection values = (Collection) value;
@@ -235,6 +259,40 @@ public abstract class NBTUtils
                     return temp;
                 }
                 throw new NBTConvertException(value, type);
+            }
+            case 12:
+            {
+                if (value instanceof long[]) return value;
+                if (value instanceof byte[])
+                {
+                    byte[] values = (byte[]) value;
+                    long[] temp = new long[values.length];
+                    int t = 0;
+                    for (byte i : values) temp[t++] = i;
+                    return temp;
+                }
+                if (value instanceof int[])
+                {
+                    int[] values = (int[]) value;
+                    long[] temp = new long[values.length];
+                    int t = 0;
+                    for (int i : values) temp[t++] = i;
+                    return temp;
+                }
+                if (value instanceof Collection)
+                {
+                    Collection values = (Collection) value;
+                    long[] temp = new long[values.size()];
+                    int t = 0;
+                    for (Object obj : values)
+                    {
+                        long val;
+                        if (obj instanceof Number) val = ((Number) obj).longValue();
+                        else throw new NBTConvertException(value, type);
+                        temp[t++] = val;
+                    }
+                    return temp;
+                }
             }
             default:
                 throw new NBTConvertException(value, type);

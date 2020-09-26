@@ -177,7 +177,9 @@ public class NBTManager
      */
     public NBTCompound read(Chunk chunk)
     {
-        return ChunkUtils.chunkUtils.readChunk(chunk);
+        NBTCompound compound = new NBTCompound();
+        ChunkUtils.chunkUtils.readChunk(chunk, compound.getHandle());
+        return compound;
     }
 
     /**
