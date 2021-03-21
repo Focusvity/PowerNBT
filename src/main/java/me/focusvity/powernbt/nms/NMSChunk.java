@@ -1,4 +1,4 @@
-package me.focusvity.powernbt.temp;
+package me.focusvity.powernbt.nms;
 
 import me.focusvity.powernbt.PowerNBT;
 import net.minecraft.server.v1_16_R3.*;
@@ -8,7 +8,7 @@ import org.bukkit.craftbukkit.v1_16_R3.CraftChunk;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-public class PNBTChunk
+public class NMSChunk
 {
 
     public static void readChunk(Chunk chunk, NBTTagCompound compound)

@@ -1,4 +1,4 @@
-package me.focusvity.powernbt.temp;
+package me.focusvity.powernbt.nms;
 
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Location;
@@ -11,7 +11,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import java.util.List;
 import java.util.Optional;
 
-public class PNBTEntity
+public class NMSEntity
 {
 
     public static net.minecraft.server.v1_16_R3.Entity getEntityHandle(Entity entity)

@@ -1,4 +1,4 @@
-package me.focusvity.powernbt.temp;
+package me.focusvity.powernbt.nms;
 
 import net.minecraft.server.v1_16_R3.BlockPosition;
 import net.minecraft.server.v1_16_R3.NBTTagCompound;
@@ -9,7 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.entity.Player;
 
-public class PNBTBlock
+public class NMSBlock
 {
 
     public static TileEntity getTileEntity(Block block)
@@ -49,7 +49,7 @@ public class PNBTBlock
         {
             if (player.getLocation().distance(block.getLocation()) < maxDistance)
             {
-                PNBTPacket.sendPacket(player, packet);
+                NMSPacket.sendPacket(player, packet);
             }
         }
     }
