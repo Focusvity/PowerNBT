@@ -1,22 +1,6 @@
-name: ${project.artifactId}
-description: ${plugin-description}
-author: ${plugin-author}
-main: me.dpohvar.powernbt.PowerNBT
-website: ${plugin-website}
+name: PowerNBT
 version: ${project.version}
-commands:
-    powernbt:
-        description: use nbt commands
-        usage: /nbt ... use [Tab] key for help
-        permission: powernbt.use
-        aliases:
-            - pnbt
-            - nbt
-    powernbt.:
-        description: use nbt commands (silent mode)
-        usage: /nbt. ... use [Tab] key for help
-        permission: powernbt.use
-        aliases:
-            - pnbt.
-            - nbt.
-
+api-version: 1.16
+authors: [DPOH-VAR, Focusvity]
+description: Powerful NBT editor for Spigot
+main: me.focusvity.powernbt.PowerNBT

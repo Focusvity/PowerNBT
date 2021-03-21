@@ -1,7 +1,7 @@
-.idea
+.idea/
 *.jar
 PowerNBT.iml
-target
+target/
 out
 doc
 .classpath
