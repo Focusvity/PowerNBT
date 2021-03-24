@@ -19,6 +19,12 @@ public class NMSBlock
         return world.getHandle().getTileEntity(position);
     }
 
+    public static void readTag(Block block, NBTTagCompound compound)
+    {
+        TileEntity tile = getTileEntity(block);
+        tile.load(tile.getBlock(), compound);
+    }
+
     public static void setTag(Block block, NBTTagCompound compound)
     {
         compound = compound.clone();
@@ -59,7 +65,7 @@ public class NMSBlock
         TileEntity tile = getTileEntity(block);
         if (tile != null)
         {
-            tile.b().a(compound);
+            tile.save(compound);
         }
     }
 }

@@ -1,0 +1,8 @@
+ignore:
+  block:
+    - id
+    - x
+    - y
+    - z
+  entity:
+    - UUID
