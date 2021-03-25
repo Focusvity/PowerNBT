@@ -8,6 +8,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class NMSItemStack
 {
 
+    public static NBTTagCompound getTag(ItemStack stack)
+    {
+        return CraftItemStack.asNMSCopy(stack).getTag();
+    }
+
+    public static void setTag(ItemStack stack, NBTTagCompound compound)
+    {
+        CraftItemStack.asNMSCopy(stack).setTag(compound);
+    }
+
     public static NBTTagCompound readItemStack(ItemStack stack, NBTTagCompound compound)
     {
         net.minecraft.server.v1_16_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
