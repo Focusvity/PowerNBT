@@ -1,5 +1,6 @@
-package me.focusvity.powernbt;
+package me.focusvity.powernbt.util;
 
+import me.focusvity.powernbt.PowerNBT;
 import me.focusvity.powernbt.command.Action;
 import me.focusvity.powernbt.command.Argument;
 import me.focusvity.powernbt.container.Container;

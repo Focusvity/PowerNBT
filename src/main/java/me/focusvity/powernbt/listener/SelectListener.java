@@ -1,6 +1,6 @@
 package me.focusvity.powernbt.listener;
 
-import me.focusvity.powernbt.Caller;
+import me.focusvity.powernbt.util.Caller;
 import me.focusvity.powernbt.PowerNBT;
 import me.focusvity.powernbt.command.Action;
 import me.focusvity.powernbt.command.Argument;

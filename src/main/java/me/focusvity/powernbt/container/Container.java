@@ -44,6 +44,11 @@ public abstract class Container<T>
 
     public abstract List<String> getTypes();
 
+    public final NBTBase getTag()
+    {
+        return readTag();
+    }
+
     public final void setTag(NBTBase base)
     {
         if (base == null)
