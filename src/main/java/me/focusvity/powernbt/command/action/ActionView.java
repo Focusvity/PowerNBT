@@ -57,11 +57,11 @@ public class ActionView extends Action
                 {
                     if (end == -1)
                     {
-                        Integer.parseInt(s);
+                        end = Integer.parseInt(s);
                     }
                     else
                     {
-                        Integer.parseInt(s);
+                        start = Integer.parseInt(s);
                     }
                 }
             }
