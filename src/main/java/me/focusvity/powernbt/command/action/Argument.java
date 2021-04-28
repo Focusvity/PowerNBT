@@ -1,10 +1,10 @@
-package me.focusvity.powernbt.command;
+package me.focusvity.powernbt.command.action;
 
 import me.focusvity.powernbt.container.Container;
+import me.focusvity.powernbt.container.*;
 import me.focusvity.powernbt.util.Caller;
 import me.focusvity.powernbt.util.Query;
 import me.focusvity.powernbt.util.StringParser;
-import me.focusvity.powernbt.container.*;
 import me.focusvity.powernbt.util.Type;
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Bukkit;
@@ -16,7 +16,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Argument
@@ -527,6 +526,11 @@ public class Argument
     public Container getContainer()
     {
         return container;
+    }
+
+    public Query getQuery()
+    {
+        return query;
     }
 
     public boolean needPrepare()

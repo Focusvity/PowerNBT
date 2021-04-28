@@ -108,14 +108,14 @@ public class ContainerVariable extends Container<Caller>
         return caller.getVariable(name);
     }
 
-    public String getVariableName()
-    {
-        return name;
-    }
-
     public void setContainer(Container c)
     {
         caller.setVariable(name, c);
+    }
+
+    public String getVariableName()
+    {
+        return name;
     }
 
     public void removeContainer()

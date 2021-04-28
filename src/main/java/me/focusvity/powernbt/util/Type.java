@@ -71,6 +71,26 @@ public enum Type
         return END;
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
+    public byte getTypeId()
+    {
+        return typeId;
+    }
+
+    public String getPrefix()
+    {
+        return prefix;
+    }
+
+    public ChatColor getColor()
+    {
+        return color;
+    }
+
     public NBTBase parse(String s)
     {
         switch (this)

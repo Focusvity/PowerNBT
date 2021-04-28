@@ -15,18 +15,6 @@ public class PowerNBT extends JavaPlugin
     private static String errorPrefix = ChatColor.DARK_RED + "[" + ChatColor.RED + "PowerNBT" + ChatColor.DARK_RED + "] " + ChatColor.RESET;
     private static HashMap<String, Caller> callers = new HashMap<>();
 
-    @Override
-    public void onEnable()
-    {
-        this.plugin = this;
-    }
-
-    @Override
-    public void onDisable()
-    {
-        this.plugin = null;
-    }
-
     public static PowerNBT getInstance()
     {
         return plugin;
@@ -53,5 +41,17 @@ public class PowerNBT extends JavaPlugin
         c = new Caller(sender);
         callers.put(sender.getName(), c);
         return c;
+    }
+
+    @Override
+    public void onEnable()
+    {
+        this.plugin = this;
+    }
+
+    @Override
+    public void onDisable()
+    {
+        this.plugin = null;
     }
 }

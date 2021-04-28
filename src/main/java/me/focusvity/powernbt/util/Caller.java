@@ -1,8 +1,8 @@
 package me.focusvity.powernbt.util;
 
 import me.focusvity.powernbt.PowerNBT;
-import me.focusvity.powernbt.command.Action;
-import me.focusvity.powernbt.command.Argument;
+import me.focusvity.powernbt.command.action.Action;
+import me.focusvity.powernbt.command.action.Argument;
 import me.focusvity.powernbt.container.Container;
 import net.minecraft.server.v1_16_R3.NBTBase;
 import org.bukkit.ChatColor;

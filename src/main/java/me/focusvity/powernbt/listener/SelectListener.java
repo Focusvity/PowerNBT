@@ -1,12 +1,12 @@
 package me.focusvity.powernbt.listener;
 
-import me.focusvity.powernbt.util.Caller;
 import me.focusvity.powernbt.PowerNBT;
-import me.focusvity.powernbt.command.Action;
-import me.focusvity.powernbt.command.Argument;
+import me.focusvity.powernbt.command.action.Action;
+import me.focusvity.powernbt.command.action.Argument;
 import me.focusvity.powernbt.container.ContainerBlock;
 import me.focusvity.powernbt.container.ContainerEntity;
 import me.focusvity.powernbt.container.ContainerItemStack;
+import me.focusvity.powernbt.util.Caller;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

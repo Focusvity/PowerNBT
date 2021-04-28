@@ -8,9 +8,6 @@ import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import java.util.List;
-import java.util.Optional;
-
 public class NMSEntity
 {
 

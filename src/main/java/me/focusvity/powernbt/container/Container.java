@@ -59,6 +59,17 @@ public abstract class Container<T>
         writeTag(base.clone());
     }
 
+    public final NBTBase getCustomTag()
+    {
+        NBTBase base = readTag();
+        if (base instanceof NBTTagCompound)
+        {
+            NBTTagCompound compound = (NBTTagCompound) base;
+            removeIgnored(compound);
+        }
+        return base;
+    }
+
     public final void setCustomTag(NBTBase base)
     {
         if (base == null)
@@ -73,17 +84,6 @@ public abstract class Container<T>
             removeIgnored(compound);
         }
         writeCustomTag(base);
-    }
-
-    public final NBTBase getCustomTag()
-    {
-        NBTBase base = readTag();
-        if (base instanceof NBTTagCompound)
-        {
-            NBTTagCompound compound = (NBTTagCompound) base;
-            removeIgnored(compound);
-        }
-        return base;
     }
 
     public final void removeTag()
