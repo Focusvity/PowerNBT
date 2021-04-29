@@ -277,6 +277,16 @@ public class Viewer
         return value;
     }
 
+    public static String getShortValueWithPrefix(NBTBase base, boolean hex, boolean bin)
+    {
+        if (base == null)
+        {
+            return "No Value";
+        }
+        Type type = Type.fromBase(base);
+        return type.getColor() + type.getPrefix() + ChatColor.RESET + ": " + getShortValue(base, hex, bin);
+    }
+
     public static String getFullValue(NBTBase base, int start, int end, boolean hex, boolean bin)
     {
         if (base == null)
