@@ -157,6 +157,34 @@ public class CommandNBT extends Command
             Action a = new ActionRename(caller, argsBefore.poll(), argsBefore.poll(), argsAfter.poll());
             a.execute();
         }
+        else if (action.equals("copy"))
+        {
+            validate(argsBefore);
+            checkArgs(argsAfter, 0, true);
+            Action a = new ActionCopy(caller, argsBefore.poll(), argsBefore.poll());
+            a.execute();
+        }
+        else if (action.equals("select") || action.equals("set"))
+        {
+            checkArgs(argsBefore, 1, true);
+            validate(argsAfter);
+            Action a = new ActionSet(caller, argsBefore.poll(), argsAfter.poll(), argsAfter.poll());
+            a.execute();
+        }
+        else if (action.equals("as"))
+        {
+            validate(argsBefore);
+            checkArgs(argsAfter, 1, true);
+            Action a = new ActionSet(caller, argsAfter.poll(), argsBefore.poll(), argsBefore.poll());
+            a.execute();
+        }
+        else if (action.equals("swap") || action.equals("<>"))
+        {
+            validate(argsBefore);
+            validate(argsAfter);
+            Action a = new ActionSwap(caller, argsBefore.poll(), argsBefore.poll(), argsAfter.poll(), argsAfter.poll());
+            a.execute();
+        }
         else if (action.equals("add") || action.equals("+="))
         {
             validate(argsBefore);
