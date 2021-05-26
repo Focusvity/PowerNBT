@@ -1,5 +1,7 @@
 package me.focusvity.powernbt;
 
+import me.focusvity.powernbt.command.CommandNBT;
+import me.focusvity.powernbt.listener.SelectListener;
 import me.focusvity.powernbt.util.Caller;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -47,6 +49,10 @@ public class PowerNBT extends JavaPlugin
     public void onEnable()
     {
         this.plugin = this;
+        getConfig().options().copyDefaults(true);
+        getServer().getPluginManager().registerEvents(new SelectListener(), this);
+        getCommand("powernbt").setExecutor(new CommandNBT());
+        //getCommand("powernbt.").setExecutor(new CommandNBT(true));
     }
 
     @Override

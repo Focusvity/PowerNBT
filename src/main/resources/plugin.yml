@@ -4,3 +4,11 @@ api-version: 1.16
 authors: [DPOH-VAR, Focusvity]
 description: Powerful NBT editor for Spigot
 main: me.focusvity.powernbt.PowerNBT
+commands:
+  powernbt:
+    description: use nbt commands
+    usage: /nbt
+    permission: powernbt.use
+    aliases:
+      - pnbt
+      - nbt

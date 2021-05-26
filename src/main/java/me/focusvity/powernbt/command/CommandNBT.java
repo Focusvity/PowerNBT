@@ -3,7 +3,11 @@ package me.focusvity.powernbt.command;
 import me.focusvity.powernbt.command.action.*;
 import me.focusvity.powernbt.util.Caller;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class CommandNBT extends Command
 {
@@ -190,6 +194,56 @@ public class CommandNBT extends Command
             validate(argsBefore);
             validate(argsAfter);
             Action a = new ActionAddAll(caller, argsBefore.poll(), argsBefore.poll(), argsAfter.poll(), argsAfter.poll());
+            a.execute();
+        }
+        else if (action.equals("insert") || action.equals("ins"))
+        {
+            validate(argsBefore);
+            checkArgs(argsAfter, 3, true);
+            checkArgs(argsAfter, 2, false);
+            Action a = new ActionInsert(caller, argsBefore.poll(), argsBefore.poll(), argsAfter.poll(), argsAfter.poll(), argsAfter.poll());
+            a.execute();
+        }
+        else if (action.equals("&="))
+        {
+            validate(argsBefore);
+            validate(argsAfter);
+            Action a = new ActionBitAnd(caller, argsBefore.poll(), argsBefore.poll(), argsAfter.poll(), argsAfter.poll());
+            a.execute();
+        }
+        else if (action.equals("|="))
+        {
+            validate(argsBefore);
+            validate(argsAfter);
+            Action a = new ActionBitOr(caller, argsBefore.poll(), argsBefore.poll(), argsAfter.poll(), argsAfter.poll());
+            a.execute();
+        }
+        else if (action.equals("^="))
+        {
+            validate(argsBefore);
+            validate(argsAfter);
+            Action a = new ActionBitXor(caller, argsBefore.poll(), argsBefore.poll(), argsAfter.poll(), argsAfter.poll());
+            a.execute();
+        }
+        else if (action.equals("*="))
+        {
+            validate(argsBefore);
+            validate(argsAfter);
+            Action a = new ActionMultiply(caller, argsBefore.poll(), argsBefore.poll(), argsAfter.poll(), argsAfter.poll());
+            a.execute();
+        }
+        else if (action.equals("~"))
+        {
+            validate(argsBefore);
+            checkArgs(argsAfter, 0, true);
+            Action a = new ActionBitInverse(caller, argsBefore.poll(), argsBefore.poll());
+            a.execute();
+        }
+        else if (action.equals("spawn"))
+        {
+            validate(argsBefore);
+            checkArgs(argsAfter, 1, true);
+            Action a = new ActionSpawn(caller, argsBefore.poll(), argsBefore.poll(), argsAfter.poll());
             a.execute();
         }
         return true;
